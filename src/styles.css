@@ -136,7 +136,7 @@ body {
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
-  background-color: var(--color-coral);
+  background-color: #FFFFFF;
 }
 
 .bg-layer::before {
@@ -379,7 +379,7 @@ body {
 .attack-card:hover {
   transform: translateY(-8px) scale(1.05);
   box-shadow: var(--shadow-xl);
-  border-color: var(--color-coral);
+  border-color: #FFFFFF;
 }
 
 .attack-card:active {
@@ -441,7 +441,7 @@ body {
   font-family: var(--font-family-display, 'Nunito', 'Segoe UI', sans-serif);
   font-size: var(--font-size-xxl);
   font-weight: var(--font-weight-black);
-  color: var(--color-coral);
+  color: #FFFFFF;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   text-align: center;
@@ -735,7 +735,7 @@ body {
   outline-offset: 2px;
 }
 
-.btn--primary   { background-color: var(--color-coral); color: #fff; }
+.btn--primary   { background-color: #FFFFFF; color: #fff; }
 .btn--secondary { background-color: var(--color-teal); color: #fff; }
 .btn--ghost {
   background-color: transparent;
@@ -890,7 +890,7 @@ body {
   width: 32px;
   height: 32px;
   border: 3px solid var(--color-border);
-  border-top-color: var(--color-coral);
+  border-top-color: #FFFFFF;
   border-radius: var(--radius-full);
   animation: spinner-rotate 0.8s linear infinite;
 }
@@ -996,7 +996,7 @@ body {
 }
 
 .attack-target-modal__player:hover {
-  border-color: var(--color-coral);
+  border-color: #FFFFFF;
   background: rgba(255, 111, 97, 0.05);
 }
 
