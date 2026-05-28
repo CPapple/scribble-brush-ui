@@ -197,11 +197,11 @@ body {
 
 .app-layout {
   display: flex;
-  gap: var(--space-2xl);
+  gap: var(--space-md);
   width: 100%;
-  max-width: 1200px;
-  height: calc(100vh - var(--space-2xl) * 2);
-  max-height: 900px;
+  max-width: 1400px;
+  
+  
 }
 
 /* ==========================================================================
@@ -340,7 +340,7 @@ body {
 
 .hand-cards {
   display: flex;
-  gap: var(--space-lg);
+  gap: var(--space-md);
   justify-content: center;
 }
 
@@ -430,7 +430,7 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: var(--space-lg);
+  gap: var(--space-md);
   min-width: 0;
   max-width: 680px;
   padding-top: var(--space-md);
@@ -987,7 +987,7 @@ body {
 .attack-target-modal__player {
   display: flex;
   align-items: center;
-  gap: var(--space-lg);
+  gap: var(--space-md);
   padding: var(--space-md);
   border: 2px solid var(--color-border);
   border-radius: var(--radius-md);
@@ -1038,8 +1038,8 @@ body {
 .items-center { align-items: center; }
 .justify-between { justify-content: space-between; }
 .gap-sm       { gap: var(--space-sm); }
-.gap-md       { gap: var(--space-lg); }
-.gap-lg       { gap: var(--space-2xl); }
+.gap-md       { gap: var(--space-md); }
+.gap-lg       { gap: var(--space-md); }
 .p-sm         { padding: var(--space-sm); }
 .p-md         { padding: var(--space-md); }
 .w-full       { width: 100%; }
@@ -1052,7 +1052,7 @@ body {
    ========================================================================== */
 @media (max-width: 900px) {
   .app-layout {
-    gap: var(--space-lg);
+    gap: var(--space-md);
   }
   .sidebar-left,
   .sidebar-right {
