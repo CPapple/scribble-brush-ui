@@ -1,5 +1,103 @@
-import { useState } from 'react';
+import { useState, useCallback, useRef, useEffect, forwardRef } from 'react';
+import DrawingCanvas from './DrawingCanvas.jsx';
 import './styles.css';
+
+// ─── Attack Card Definitions ────────────────────────────────────────────────
+const ATTACK_CARDS = [
+  {
+    id: 'blur',
+    name: '模糊',
+    icon: '🌫️',
+    type: 'visual',
+    description: '使目標視線模糊',
+    duration: 8000,
+    effectClass: 'canvas-effect--blur',
+  },
+  {
+    id: 'opacity',
+    name: '透視',
+    icon: '👻',
+    type: 'visual',
+    description: '畫面透明度提高',
+    duration: 8000,
+    effectClass: 'canvas-effect--opacity',
+  },
+  {
+    id: 'lag',
+    name: '卡頓',
+    icon: '🐢',
+    type: 'delay',
+    description: '畫面幀率下降',
+    duration: 8000,
+    effectClass: 'canvas-effect--lag',
+  },
+  {
+    id: 'water-break',
+    name: '斷水',
+    icon: '💧',
+    type: 'tool',
+    description: '畫筆突然沒水',
+    duration: 8000,
+    effectClass: 'canvas-effect--water-break',
+  },
+  {
+    id: 'brush-size',
+    name: '失控',
+    icon: '🖌️',
+    type: 'tool',
+    description: '筆刷大小突變',
+    duration: 8000,
+    effectClass: 'canvas-effect--brush-mutation',
+  },
+  {
+    id: 'flip-h',
+    name: '反轉',
+    icon: '↔️',
+    type: 'control',
+    description: '畫面左右反轉',
+    duration: 8000,
+    effectClass: '',
+    flipHorizontal: true,
+  },
+  {
+    id: 'flip-v',
+    name: '顛倒',
+    icon: '↕️',
+    type: 'control',
+    description: '畫面上下反轉',
+    duration: 8000,
+    effectClass: '',
+    flipVertical: true,
+  },
+  {
+    id: 'mask',
+    name: '遮罩',
+    icon: '🖼️',
+    type: 'visual',
+    description: '隨機圖片遮罩',
+    duration: 8000,
+    effectClass: 'canvas-effect--mask',
+  },
+  {
+    id: 'color',
+    name: '變色',
+    icon: '🎨',
+    type: 'tool',
+    description: '筆刷色彩突變',
+    duration: 8000,
+    effectClass: 'canvas-effect--color-invert',
+  },
+  {
+    id: 'change-word',
+    name: '換題',
+    icon: '❓',
+    type: 'special',
+    description: '突然更換題目',
+    duration: 0,
+    effectClass: '',
+    changesWord: true,
+  },
+];
 
 // ─── Theme Toggle ────────────────────────────────────────────────────────────
 function ThemeToggle({ theme, onToggle }) {
@@ -8,7 +106,6 @@ function ThemeToggle({ theme, onToggle }) {
       className="btn btn--ghost btn--icon"
       onClick={onToggle}
       aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
-      title={theme === 'light' ? '深色模式' : '淺色模式'}
     >
       {theme === 'light' ? '🌙' : '☀️'}
     </button>
@@ -18,33 +115,32 @@ function ThemeToggle({ theme, onToggle }) {
 // ─── Ping Indicator ─────────────────────────────────────────────────────────
 function PingIndicator({ ping }) {
   let level = 'good';
-  let label = `${ping}ms`;
   if (ping >= 150) level = 'bad';
   else if (ping >= 80) level = 'medium';
 
   return (
     <div className="ping-indicator" title={`延遲: ${ping}ms`}>
-      <span className={`ping-dot ping-dot--${level}`}></span>
-      <span className="text-muted">{label}</span>
+      <span className={`ping-dot ping-dot--${level}`} />
+      <span className="text-muted">{ping}ms</span>
     </div>
   );
 }
 
 // ─── Avatar ─────────────────────────────────────────────────────────────────
-function Avatar({ name, size = '', src }) {
+function Avatar({ name, size = '' }) {
   const initials = name ? name.slice(0, 1).toUpperCase() : '?';
   return (
     <div className={`avatar ${size ? `avatar--${size}` : ''}`}>
-      {src ? <img src={src} alt={name} /> : initials}
+      {initials}
     </div>
   );
 }
 
 // ─── Player Item ────────────────────────────────────────────────────────────
-function PlayerItem({ name, score, isDrawing, isWinner, isFirst, isMe }) {
+function PlayerItem({ name, score, isDrawing, isFirst, isMe, isAttacked, isAttacker }) {
   return (
     <div
-      className={`player-item ${isWinner ? 'player-item--winner' : ''} ${isFirst ? 'player-item--first' : ''}`}
+      className={`player-item ${isAttacked ? 'player-item--attacked' : ''} ${isFirst ? 'player-item--first' : ''} ${isAttacked ? 'attack-warning' : ''}`}
     >
       <Avatar name={name} size="sm" />
       <div className="player-info">
@@ -53,35 +149,31 @@ function PlayerItem({ name, score, isDrawing, isWinner, isFirst, isMe }) {
         </div>
         <div className="player-score">{score} 分</div>
       </div>
-      {isDrawing && (
-        <span className="badge badge--warning">✏️ 繪圖中</span>
-      )}
-      {isFirst && !isDrawing && (
-        <span className="badge badge--gold">👑</span>
-      )}
+      {isDrawing && <span className="badge badge--warning">✏️</span>}
+      {isFirst && !isDrawing && <span className="badge badge--gold">👑</span>}
     </div>
   );
 }
 
-// ─── Player List (Left Sidebar) ─────────────────────────────────────────────
-function PlayerList({ players, myId }) {
+// ─── Player List ────────────────────────────────────────────────────────────
+function PlayerList({ players, myId, attackedPlayerId }) {
   const sorted = [...players].sort((a, b) => b.score - a.score);
 
   return (
-    <aside className="sidebar-left card" style={{ width: 'var(--sidebar-left-width)', display: 'flex', flexDirection: 'column' }}>
+    <aside className="sidebar-left card">
       <div className="p-md" style={{ borderBottom: '1px solid var(--color-border)' }}>
-        <h2>玩家列表</h2>
+        <h2>玩家</h2>
       </div>
-      <div className="player-list" style={{ flex: 1, overflowY: 'auto' }}>
+      <div className="player-list">
         {sorted.map((player, index) => (
           <PlayerItem
             key={player.id}
             name={player.name}
             score={player.score}
             isDrawing={player.isDrawing}
-            isWinner={player.isWinner}
             isFirst={index === 0}
             isMe={player.id === myId}
+            isAttacked={player.id === attackedPlayerId}
           />
         ))}
       </div>
@@ -91,7 +183,6 @@ function PlayerList({ players, myId }) {
 
 // ─── Chat Message ────────────────────────────────────────────────────────────
 function ChatMessage({ sender, text, type }) {
-  // type: 'normal' | 'system' | 'correct' | 'wrong'
   return (
     <div className={`chat-message chat-message--${type}`}>
       {sender && <strong>{sender}: </strong>}
@@ -100,9 +191,14 @@ function ChatMessage({ sender, text, type }) {
   );
 }
 
-// ─── Chat Panel (Right Sidebar) ─────────────────────────────────────────────
+// ─── Chat Panel ──────────────────────────────────────────────────────────────
 function ChatPanel({ messages, onSendMessage }) {
   const [input, setInput] = useState('');
+  const messagesEndRef = useRef(null);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -112,22 +208,16 @@ function ChatPanel({ messages, onSendMessage }) {
   };
 
   return (
-    <aside className="sidebar-right card" style={{ width: 'var(--sidebar-right-width)', display: 'flex', flexDirection: 'column' }}>
+    <aside className="sidebar-right card">
       <div className="p-md" style={{ borderBottom: '1px solid var(--color-border)' }}>
         <h2>聊天 / 猜題</h2>
       </div>
-
-      {/* Messages area */}
-      <div
-        className="p-sm"
-        style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 'var(--space-xs)' }}
-      >
+      <div className="chat-messages">
         {messages.map((msg, i) => (
           <ChatMessage key={i} {...msg} />
         ))}
+        <div ref={messagesEndRef} />
       </div>
-
-      {/* Input */}
       <form className="chat-input-wrapper" onSubmit={handleSubmit}>
         <input
           type="text"
@@ -137,16 +227,14 @@ function ChatPanel({ messages, onSendMessage }) {
           onChange={(e) => setInput(e.target.value)}
           aria-label="聊天輸入框"
         />
-        <button type="submit" className="btn btn--primary">
-          送出
-        </button>
+        <button type="submit" className="btn btn--primary">送出</button>
       </form>
     </aside>
   );
 }
 
-// ─── Game Header (Timer + Hint) ────────────────────────────────────────────
-function GameHeader({ timeLeft, wordHint, totalTime = 60 }) {
+// ─── Game Header ────────────────────────────────────────────────────────────
+function GameHeader({ timeLeft, wordHint }) {
   const isWarning = timeLeft <= 10;
 
   return (
@@ -159,27 +247,21 @@ function GameHeader({ timeLeft, wordHint, totalTime = 60 }) {
   );
 }
 
-// ─── Drawing Canvas ─────────────────────────────────────────────────────────
-function DrawingCanvas({ canvasRef, isDrawing, onDrawStart, onDrawMove, onDrawEnd }) {
+// ─── Tool Button ────────────────────────────────────────────────────────────
+function ToolButton({ icon, isActive, onClick, label }) {
   return (
-    <div className="canvas-wrapper">
-      <canvas
-        ref={canvasRef}
-        onMouseDown={onDrawStart}
-        onMouseMove={onDrawMove}
-        onMouseUp={onDrawEnd}
-        onMouseLeave={onDrawEnd}
-        onTouchStart={onDrawStart}
-        onTouchMove={onDrawMove}
-        onTouchEnd={onDrawEnd}
-        aria-label="繪圖畫布"
-        title="繪圖區域"
-      />
-    </div>
+    <button
+      className={`tool-btn ${isActive ? 'tool-btn--active' : ''}`}
+      onClick={onClick}
+      aria-label={label}
+      title={label}
+    >
+      <span style={{ fontSize: '1.2rem' }}>{icon}</span>
+    </button>
   );
 }
 
-// ─── Color Swatch Button ────────────────────────────────────────────────────
+// ─── Color Swatch ───────────────────────────────────────────────────────────
 function ColorSwatch({ color, isActive, onClick, label }) {
   return (
     <button
@@ -188,10 +270,7 @@ function ColorSwatch({ color, isActive, onClick, label }) {
       aria-label={label}
       title={label}
     >
-      <span
-        className="color-swatch"
-        style={{ backgroundColor: color }}
-      />
+      <span className="color-swatch" style={{ backgroundColor: color }} />
     </button>
   );
 }
@@ -206,149 +285,144 @@ function BrushSizeButton({ size, isActive, onClick }) {
       title={`畫筆大小 ${size}`}
     >
       <div className="brush-size-preview">
-        <span
-          className="brush-dot"
-          style={{ width: size, height: size }}
-        />
+        <span className="brush-dot" style={{ width: size, height: size }} />
       </div>
     </button>
   );
 }
 
-// ─── Tool Button (Icon-only) ────────────────────────────────────────────────
-function ToolButton({ icon, isActive, onClick, label, danger }) {
-  return (
-    <button
-      className={`tool-btn ${isActive ? 'tool-btn--active' : ''} ${danger ? 'btn--danger' : ''}`}
-      onClick={onClick}
-      aria-label={label}
-      title={label}
-    >
-      <span style={{ fontSize: '1.2rem' }}>{icon}</span>
-    </button>
-  );
-}
-
-// ─── Toolbar (Bottom) ───────────────────────────────────────────────────────
-function Toolbar({ tool, brushColor, brushSize, onToolChange, onColorChange, onSizeChange, onClear, onUndo, canUndo }) {
+// ─── Toolbar ─────────────────────────────────────────────────────────────────
+function Toolbar({ tool, brushColor, brushSize, onToolChange, onColorChange, onSizeChange }) {
   const colors = ['#000000', '#FF6F61', '#20B2AA', '#90EE90', '#FFD700', '#FF4500', '#8B5CF6', '#3E403F'];
   const sizes = [4, 8, 12, 20];
-  const tools = [
-    { id: 'brush', icon: '🖌️', label: '畫筆' },
-    { id: 'eraser', icon: '🧹', label: '橡皮擦' },
-  ];
 
   return (
     <div className="toolbar">
-      {/* Drawing Tools */}
       <div className="toolbar-group">
-        {tools.map((t) => (
-          <ToolButton
-            key={t.id}
-            icon={t.icon}
-            isActive={tool === t.id}
-            onClick={() => onToolChange(t.id)}
-            label={t.label}
-          />
-        ))}
+        <ToolButton icon="🖌️" isActive={tool === 'brush'} onClick={() => onToolChange('brush')} label="畫筆" />
+        <ToolButton icon="🧹" isActive={tool === 'eraser'} onClick={() => onToolChange('eraser')} label="橡皮擦" />
       </div>
-
       <div className="toolbar-divider" />
-
-      {/* Colors */}
       <div className="toolbar-group">
         {colors.map((c) => (
-          <ColorSwatch
-            key={c}
-            color={c}
-            isActive={brushColor === c}
-            onClick={() => onColorChange(c)}
-            label={`顏色 ${c}`}
-          />
+          <ColorSwatch key={c} color={c} isActive={brushColor === c} onClick={() => onColorChange(c)} label={`顏色 ${c}`} />
         ))}
       </div>
-
       <div className="toolbar-divider" />
-
-      {/* Brush Sizes */}
       <div className="toolbar-group">
         {sizes.map((s) => (
-          <BrushSizeButton
-            key={s}
-            size={s}
-            isActive={brushSize === s}
-            onClick={() => onSizeChange(s)}
+          <BrushSizeButton key={s} size={s} isActive={brushSize === s} onClick={() => onSizeChange(s)} />
+        ))}
+      </div>
+      <div className="toolbar-divider" />
+      <div className="toolbar-group">
+        <ToolButton icon="↩️" onClick={() => {}} label="復原" />
+        <ToolButton icon="🗑️" onClick={() => {}} label="清空" danger />
+      </div>
+    </div>
+  );
+}
+
+// ─── Drawing Canvas ─────────────────────────────────────────────────────────
+function DrawingCanvas({ canvasRef, tool, brushColor, brushSize, flipH, flipV, canvasEffect }) {
+  return (
+    <div
+      className={`canvas-wrapper ${flipH ? 'canvas-wrapper--flipped' : ''} ${flipV ? 'canvas-wrapper--flipped-v' : ''} ${canvasEffect ? 'canvas-effect--active' : ''}`}
+    >
+      {canvasEffect && <div className="canvas-effect-overlay" />}
+      <canvas
+        ref={canvasRef}
+        aria-label="繪圖畫布"
+        title="在畫布上繪圖"
+        style={{ cursor: tool === 'eraser' ? 'crosshair' : 'crosshair' }}
+      />
+    </div>
+  );
+}
+
+// ─── Attack Card ─────────────────────────────────────────────────────────────
+function AttackCard({ card, isSelected, isDisabled, onClick }) {
+  return (
+    <button
+      className={`attack-card attack-card--${card.type} ${isSelected ? 'attack-card--selected' : ''} ${isDisabled ? 'attack-card--disabled' : ''}`}
+      onClick={onClick}
+      disabled={isDisabled}
+      title={card.description}
+    >
+      <span className="attack-card__icon">{card.icon}</span>
+      <span className="attack-card__name">{card.name}</span>
+    </button>
+  );
+}
+
+// ─── Hand Cards ─────────────────────────────────────────────────────────────
+function HandCards({ cards, selectedCard, onSelectCard, disabled }) {
+  if (cards.length === 0) return null;
+
+  return (
+    <div className="hand-cards-container">
+      <div className="hand-cards-label">🎴 手牌</div>
+      <div className="hand-cards">
+        {cards.map((card) => (
+          <AttackCard
+            key={card.id}
+            card={card}
+            isSelected={selectedCard?.id === card.id}
+            isDisabled={disabled}
+            onClick={() => onSelectCard(card)}
           />
         ))}
       </div>
+    </div>
+  );
+}
 
-      <div className="toolbar-divider" />
+// ─── Attack Target Modal ─────────────────────────────────────────────────────
+function AttackTargetModal({ card, players, myId, onSelectTarget, onCancel }) {
+  const availablePlayers = players.filter((p) => p.id !== myId && !p.isDrawing);
 
-      {/* Actions */}
-      <div className="toolbar-group">
-        <ToolButton
-          icon="↩️"
-          onClick={onUndo}
-          disabled={!canUndo}
-          label="復原"
-        />
-        <ToolButton
-          icon="🗑️"
-          onClick={onClear}
-          danger
-          label="清空畫布"
-        />
+  return (
+    <div className="attack-target-modal" onClick={onCancel}>
+      <div className="attack-target-modal__content" onClick={(e) => e.stopPropagation()}>
+        <div className="attack-target-modal__title">
+          {card.icon} 選擇攻擊目標
+        </div>
+        <div className="attack-target-modal__players">
+          {availablePlayers.map((player) => (
+            <div
+              key={player.id}
+              className="attack-target-modal__player"
+              onClick={() => onSelectTarget(player.id)}
+            >
+              <Avatar name={player.name} />
+              <div className="attack-target-modal__player-info">
+                <div className="attack-target-modal__player-name">{player.name}</div>
+                <div className="attack-target-modal__player-role">
+                  {player.score} 分
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <button className="btn btn--ghost attack-target-modal__cancel" onClick={onCancel}>
+          取消
+        </button>
       </div>
     </div>
   );
 }
 
-// ─── Loading Skeleton ───────────────────────────────────────────────────────
-function Skeleton({ variant = 'text' }) {
-  return <div className={`skeleton skeleton--${variant}`} />;
-}
-
-function PlayerListSkeleton() {
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-sm)', padding: 'var(--space-md)' }}>
-      {[...Array(4)].map((_, i) => (
-        <div key={i} style={{ display: 'flex', gap: 'var(--space-sm)', alignItems: 'center' }}>
-          <Skeleton variant="circle" />
-          <div style={{ flex: 1 }}>
-            <Skeleton variant="text" />
-            <Skeleton variant="text" />
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function ChatSkeleton() {
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-xs)', padding: 'var(--space-sm)' }}>
-      {[...Array(5)].map((_, i) => (
-        <Skeleton key={i} variant="text" />
-      ))}
-    </div>
-  );
-}
-
-// ─── Main App Layout ────────────────────────────────────────────────────────
+// ─── Main App ───────────────────────────────────────────────────────────────
 function App() {
   // ── Theme ──
   const [theme, setTheme] = useState('light');
 
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
-  };
-
-  // ── Dummy Data (Replace with real state from backend) ──
-  const [players] = useState([
-    { id: '1', name: '宇辰', score: 850, isDrawing: true, isWinner: false },
-    { id: '2', name: '小美', score: 720, isDrawing: false, isWinner: false },
-    { id: '3', name: '我', score: 690, isDrawing: false, isWinner: false },
-    { id: '4', name: '阿偉', score: 500, isDrawing: false, isWinner: false },
+  // ── Game State ──
+  const [players, setPlayers] = useState([
+    { id: '1', name: '宇辰', score: 850, isDrawing: true },
+    { id: '2', name: '小美', score: 720, isDrawing: false },
+    { id: '3', name: '我', score: 690, isDrawing: false },
+    { id: '4', name: '阿偉', score: 500, isDrawing: false },
   ]);
   const myId = '3';
 
@@ -359,104 +433,276 @@ function App() {
   ]);
 
   const [timeLeft, setTimeLeft] = useState(45);
-  const wordHint = '_ _ _ _';
+  const wordHint = '_ _ _ _ _';
 
-  // ── Toolbar State ──
+  // ── Drawing State ──
   const [tool, setTool] = useState('brush');
   const [brushColor, setBrushColor] = useState('#000000');
   const [brushSize, setBrushSize] = useState(8);
-  const [canUndo, setCanUndo] = useState(true);
+  const canvasRef = useRef(null);
 
-  // ── Canvas Ref ──
-  const canvasRef = useState(null)[0];
+  // ── Attack System ──
+  const [handCards, setHandCards] = useState([
+    ATTACK_CARDS[0],
+    ATTACK_CARDS[4],
+  ]);
+  const [selectedCard, setSelectedCard] = useState(null);
+  const [showTargetModal, setShowTargetModal] = useState(false);
+  const [attackedPlayerId, setAttackedPlayerId] = useState(null);
+  const [activeEffect, setActiveEffect] = useState(null);
+  const [isEffectIncoming, setIsEffectIncoming] = useState(false);
+  const [flipH, setFlipH] = useState(false);
+  const [flipV, setFlipV] = useState(false);
+  const [canvasEffect, setCanvasEffect] = useState(null);
+  const [newWord, setNewWord] = useState(null);
 
-  // ── Handlers ──
+  // ── Canvas Drawing Logic ──
+  const getCanvasPos = useCallback((e) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return null;
+    const rect = canvas.getBoundingClientRect();
+    let clientX, clientY;
+    if (e.touches) {
+      clientX = e.touches[0]?.clientX ?? e.clientX;
+      clientY = e.touches[0]?.clientY ?? e.clientY;
+    } else {
+      clientX = e.clientX;
+      clientY = e.clientY;
+    }
+    return {
+      x: clientX - rect.left,
+      y: clientY - rect.top,
+    };
+  }, []);
+
+  const draw = useCallback((from, to) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.lineWidth = brushSize;
+    ctx.strokeStyle = tool === 'eraser' ? '#FFFFFF' : brushColor;
+    ctx.beginPath();
+    ctx.moveTo(from.x, from.y);
+    ctx.lineTo(to.x, to.y);
+    ctx.stroke();
+  }, [brushColor, brushSize, tool]);
+
+  const handlePointerDown = useCallback((e) => {
+    const pos = getCanvasPos(e);
+    if (!pos) return;
+    isDrawingRef.current = true;
+    lastPosRef.current = pos;
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.lineWidth = brushSize;
+      ctx.fillStyle = tool === 'eraser' ? '#FFFFFF' : brushColor;
+      ctx.beginPath();
+      ctx.arc(pos.x, pos.y, brushSize / 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }, [getCanvasPos, brushColor, brushSize, tool]);
+
+  const handlePointerMove = useCallback((e) => {
+    if (!isDrawingRef.current) return;
+    const pos = getCanvasPos(e);
+    if (!pos || !lastPosRef.current) return;
+    draw(lastPosRef.current, pos);
+    lastPosRef.current = pos;
+  }, [getCanvasPos, draw]);
+
+  const handlePointerUp = useCallback(() => {
+    isDrawingRef.current = false;
+    lastPosRef.current = null;
+  }, []);
+
+  // ── Canvas Resize ──
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const resize = () => {
+      const parent = canvas.parentElement;
+      if (!parent) return;
+      canvas.width = parent.clientWidth;
+      canvas.height = parent.clientHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    };
+    resize();
+    window.addEventListener('resize', resize);
+    return () => window.removeEventListener('resize', resize);
+  }, []);
+
+  // ── Timer ──
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimeLeft((t) => Math.max(0, t - 1));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // ── Chat ──
   const handleSendMessage = (text) => {
     setMessages((prev) => [...prev, { type: 'normal', sender: '我', text }]);
   };
 
-  const handleClear = () => {
-    if (window.confirm('確定要清空畫布嗎？')) {
-      // TODO: Clear canvas logic
-    }
+  // ── Card Selection ──
+  const handleSelectCard = (card) => {
+    setSelectedCard(card);
+    setShowTargetModal(true);
+  };
+
+  // ── Attack Execution ──
+  const handleSelectTarget = useCallback((targetId) => {
+    if (!selectedCard) return;
+    setShowTargetModal(false);
+    setAttackedPlayerId(targetId);
+
+    // Add system message
+    const targetPlayer = players.find((p) => p.id === targetId);
+    setMessages((prev) => [
+      ...prev,
+      { type: 'attack-announce', text: `⚠️ ${targetPlayer?.name} 即将受到「${selectedCard.name}」攻擊！` },
+    ]);
+
+    // 1.5s warning flash
+    setIsEffectIncoming(true);
+    setTimeout(() => {
+      setIsEffectIncoming(false);
+      setAttackedPlayerId(null);
+
+      // Apply effect for 8s
+      setActiveEffect(selectedCard);
+
+      if (selectedCard.flipHorizontal) setFlipH(true);
+      if (selectedCard.flipVertical) setFlipV(true);
+      if (selectedCard.effectClass) setCanvasEffect(selectedCard.effectClass);
+
+      // Word change effect
+      if (selectedCard.changesWord) {
+        const randomCard = ATTACK_CARDS[Math.floor(Math.random() * ATTACK_CARDS.length)];
+        setNewWord(`[${selectedCard.icon} 已換題]`);
+        setTimeout(() => setNewWord(null), 3000);
+      }
+
+      setMessages((prev) => [
+        ...prev,
+        { type: 'system', text: `💥 ${selectedCard.name} 攻擊生效！` },
+      ]);
+
+      // After 8s, start 2s fade
+      setTimeout(() => {
+        setCanvasEffect(null);
+        setFlipH(false);
+        setFlipV(false);
+        setActiveEffect(null);
+        setMessages((prev) => [
+          ...prev,
+          { type: 'system', text: `✨ 效果結束` },
+        ]);
+      }, 8000);
+    }, 1500);
+
+    // Remove card from hand
+    setHandCards((prev) => prev.filter((c) => c.id !== selectedCard.id));
+    setSelectedCard(null);
+  }, [selectedCard, players]);
+
+  // ── Word Hint Display ──
+  const displayWordHint = newWord || wordHint;
+
+  // ── Theme Toggle ──
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
   };
 
   return (
-    <div
-      className="app-layout"
-      data-theme={theme}
-      style={{
-        display: 'flex',
-        height: '100vh',
-        gap: 'var(--space-lg)',
-        padding: 'var(--space-md)',
-        backgroundColor: 'var(--color-bg-app)',
-      }}
-    >
-      {/* Left Sidebar — Player List */}
-      <PlayerList players={players} myId={myId} />
+    <>
+      {/* Background Layer */}
+      <div
+        className={`bg-layer ${isEffectIncoming ? 'bg-layer--warning' : ''}`}
+        data-theme={theme}
+      />
 
-      {/* Center — Game Area */}
-      <main
-        className="game-area"
-        style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 'var(--space-sm)', minWidth: 0 }}
-      >
-        {/* Top Bar */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '0 var(--space-sm)',
-          }}
-        >
-          <h1 style={{ fontSize: 'var(--font-size-h1)', fontWeight: 'var(--font-weight-bold)' }}>
-            Scribble Brush
-          </h1>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-md)' }}>
-            <PingIndicator ping={42} />
-            <ThemeToggle theme={theme} onToggle={toggleTheme} />
-          </div>
-        </div>
-
-        {/* Canvas Card */}
-        <div className="card" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-          <GameHeader timeLeft={timeLeft} wordHint={wordHint} />
-          <div style={{ flex: 1, padding: 'var(--space-md)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            {/* TODO: Replace with real DrawingCanvas */}
-            <div
-              style={{
-                width: '100%',
-                aspectRatio: '4/3',
-                maxHeight: 'calc(100vh - 280px)',
-                backgroundColor: 'var(--color-bg-canvas)',
-                borderRadius: 'var(--radius-md)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--color-text-secondary)',
-              }}
-            >
-              繪圖區域（待接入 DrawingCanvas 元件）
-            </div>
-          </div>
-          <Toolbar
-            tool={tool}
-            brushColor={brushColor}
-            brushSize={brushSize}
-            onToolChange={setTool}
-            onColorChange={setBrushColor}
-            onSizeChange={setBrushSize}
-            onClear={handleClear}
-            onUndo={() => setCanUndo(false)}
-            canUndo={canUndo}
+      {/* Main App */}
+      <div className="app-wrapper">
+        <div className="app-layout">
+          {/* Left - Player List */}
+          <PlayerList
+            players={players}
+            myId={myId}
+            attackedPlayerId={isEffectIncoming ? attackedPlayerId : null}
           />
-        </div>
-      </main>
 
-      {/* Right Sidebar — Chat */}
-      <ChatPanel messages={messages} onSendMessage={handleSendMessage} />
-    </div>
+          {/* Center - Game Area */}
+          <main className="game-area">
+            {/* Top Bar */}
+            <div className="game-top-bar">
+              <div className="game-title">Scribble Brush</div>
+              <div className="game-status-icons">
+                <PingIndicator ping={42} />
+                <ThemeToggle theme={theme} onToggle={toggleTheme} />
+              </div>
+            </div>
+
+            {/* Canvas Card */}
+            <div className={`canvas-card card ${canvasEffect || isEffectIncoming ? 'attack-effect--active' : ''}`}>
+              <GameHeader timeLeft={timeLeft} wordHint={displayWordHint} />
+              <DrawingCanvas
+                ref={canvasRef}
+                tool={tool}
+                brushColor={brushColor}
+                brushSize={brushSize}
+                flipH={flipH}
+                flipV={flipV}
+                canvasEffect={canvasEffect}
+                onDrawStart={handlePointerDown}
+                onDrawMove={handlePointerMove}
+                onDrawEnd={handlePointerUp}
+              />
+              <Toolbar
+                tool={tool}
+                brushColor={brushColor}
+                brushSize={brushSize}
+                onToolChange={setTool}
+                onColorChange={setBrushColor}
+                onSizeChange={setBrushSize}
+              />
+            </div>
+          </main>
+
+          {/* Right - Chat */}
+          <ChatPanel messages={messages} onSendMessage={handleSendMessage} />
+        </div>
+      </div>
+
+      {/* Hand Cards */}
+      <HandCards
+        cards={handCards}
+        selectedCard={selectedCard}
+        onSelectCard={handleSelectCard}
+        disabled={showTargetModal}
+      />
+
+      {/* Attack Target Modal */}
+      {showTargetModal && selectedCard && (
+        <AttackTargetModal
+          card={selectedCard}
+          players={players}
+          myId={myId}
+          onSelectTarget={handleSelectTarget}
+          onCancel={() => {
+            setShowTargetModal(false);
+            setSelectedCard(null);
+          }}
+        />
+      )}
+    </>
   );
 }
 
