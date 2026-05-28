@@ -639,7 +639,7 @@ function App() {
           <main className="game-area">
             {/* Top Bar */}
             <div className="game-top-bar">
-              <div className="game-title">Scribble Brush</div>
+              <div className="game-title">Pictionary</div>
               <div className="game-status-icons">
                 <PingIndicator ping={42} />
                 <ThemeToggle theme={theme} onToggle={toggleTheme} />
