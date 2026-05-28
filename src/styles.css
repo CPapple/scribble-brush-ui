@@ -90,23 +90,6 @@
 /* --------------------------------------------------------------------------
    Dark Mode
    -------------------------------------------------------------------------- */
-[data-theme="dark"] {
-  --color-spring-green: #76D176;
-  --color-bg-app:      #121212;
-  --color-bg-surface:  #1E1E1E;
-  --color-bg-canvas:   #F5F5F5;
-  --color-bg-input:    #1E1E1E;
-  --color-border:      #333333;
-  --color-divider:     #333333;
-  --color-text-primary:   #E0E0E0;
-  --color-text-secondary: #A0A0A0;
-}
-
-/* --------------------------------------------------------------------------
-   Reset & Base
-   -------------------------------------------------------------------------- */
-*, *::before, *::after {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
@@ -259,7 +242,8 @@ body {
 }
 
 .player-name {
-  font-size: var(--font-size-h2);
+  font-size: 14px;
+  /* unified to 14px */ 
   font-weight: var(--font-weight-semibold);
   white-space: nowrap;
   overflow: hidden;
@@ -267,7 +251,7 @@ body {
 }
 
 .player-score {
-  font-size: var(--font-size-caption);
+  font-size: 14px;
   color: var(--color-text-secondary);
 }
 
@@ -333,7 +317,7 @@ body {
 }
 
 .hand-cards-label {
-  font-size: var(--font-size-caption);
+  font-size: 14px;
   font-weight: var(--font-weight-semibold);
   color: rgba(255,255,255,0.8);
   text-transform: uppercase;
@@ -405,7 +389,7 @@ body {
 }
 
 .attack-card__name {
-  font-size: var(--font-size-caption);
+  font-size: 14px;
   font-weight: var(--font-weight-semibold);
   text-align: center;
   color: var(--color-text-primary);
@@ -487,7 +471,7 @@ body {
 }
 
 .word-hint {
-  font-size: var(--font-size-h2);
+  /* unified to 14px */ 
   font-weight: var(--font-weight-semibold);
   letter-spacing: 0.15em;
   color: var(--color-text-secondary);
@@ -671,7 +655,7 @@ body {
 .chat-message--system {
   color: var(--color-spring-green);
   font-weight: var(--font-weight-bold);
-  font-size: var(--font-size-caption);
+  font-size: 14px;
   background: rgba(144, 238, 144, 0.1);
   border-radius: var(--radius-sm);
   padding: var(--space-xs) var(--space-sm);
@@ -821,7 +805,7 @@ body {
   align-items: center;
   justify-content: center;
   font-weight: var(--font-weight-semibold);
-  font-size: var(--font-size-h2);
+  /* unified to 14px */ 
   flex-shrink: 0;
   overflow: hidden;
 }
@@ -836,7 +820,7 @@ body {
   display: inline-flex;
   align-items: center;
   padding: 2px var(--space-sm);
-  font-size: var(--font-size-caption);
+  font-size: 14px;
   font-weight: var(--font-weight-semibold);
   border-radius: 999px;
   background-color: var(--color-border);
@@ -853,7 +837,7 @@ body {
   display: flex;
   align-items: center;
   gap: var(--space-xs);
-  font-size: var(--font-size-caption);
+  font-size: 14px;
   font-weight: var(--font-weight-semibold);
 }
 .ping-dot {
@@ -1008,11 +992,11 @@ body {
 
 .attack-target-modal__player-name {
   font-weight: var(--font-weight-semibold);
-  font-size: var(--font-size-h2);
+  /* unified to 14px */ 
 }
 
 .attack-target-modal__player-role {
-  font-size: var(--font-size-caption);
+  font-size: 14px;
   color: var(--color-text-secondary);
 }
 
