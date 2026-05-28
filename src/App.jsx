@@ -1,5 +1,6 @@
-import { useState, useCallback, useRef, useEffect, forwardRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import DrawingCanvas from './DrawingCanvas.jsx';
+import BackgroundLayer from './BackgroundLayer.jsx';
 import './styles.css';
 
 // ─── Attack Card Definitions ────────────────────────────────────────────────
@@ -624,10 +625,20 @@ function App() {
   return (
     <>
       {/* Background Layer */}
-      <div
-        className={`bg-layer ${isEffectIncoming ? 'bg-layer--warning' : ''}`}
-        data-theme={theme}
-      />
+      <BackgroundLayer speed={1} iconColor="rgba(255,255,255,0.12)" iconSize={80} />
+
+      {/* Attack Warning Overlay */}
+      {isEffectIncoming && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 5,
+            pointerEvents: 'none',
+            animation: 'bg-pulse-warning 0.3s ease-in-out infinite alternate',
+          }}
+        />
+      )}
 
       {/* Main App */}
       <div className="app-wrapper">
