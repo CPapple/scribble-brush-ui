@@ -200,6 +200,8 @@ body {
   gap: var(--space-md);
   width: 100%;
   max-width: 1400px;
+  height: calc(100vh - 280px);
+  max-height: 820px;
   
   
 }
