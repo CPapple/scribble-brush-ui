@@ -325,21 +325,6 @@ function Toolbar({ tool, brushColor, brushSize, onToolChange, onColorChange, onS
 }
 
 // ─── Drawing Canvas ─────────────────────────────────────────────────────────
-function DrawingCanvas({ canvasRef, tool, brushColor, brushSize, flipH, flipV, canvasEffect }) {
-  return (
-    <div
-      className={`canvas-wrapper ${flipH ? 'canvas-wrapper--flipped' : ''} ${flipV ? 'canvas-wrapper--flipped-v' : ''} ${canvasEffect ? 'canvas-effect--active' : ''}`}
-    >
-      {canvasEffect && <div className="canvas-effect-overlay" />}
-      <canvas
-        ref={canvasRef}
-        aria-label="繪圖畫布"
-        title="在畫布上繪圖"
-        style={{ cursor: tool === 'eraser' ? 'crosshair' : 'crosshair' }}
-      />
-    </div>
-  );
-}
 
 // ─── Attack Card ─────────────────────────────────────────────────────────────
 function AttackCard({ card, isSelected, isDisabled, onClick }) {
