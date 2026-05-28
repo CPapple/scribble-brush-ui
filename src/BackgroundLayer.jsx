@@ -1,251 +1,257 @@
 import { useEffect, useRef, useCallback } from 'react';
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   Each icon is a simple draw function: (ctx, cx, cy, size, color) => void
-   Uses basic Canvas 2D primitives only — no SVG path parsing.
+   Icon drawing functions — each: (ctx, cx, cy, size, color) => void
+   Style: thick strokes with rounded caps (white on coral background)
    ───────────────────────────────────────────────────────────────────────────── */
 
-function drawSun(ctx, cx, cy, size, color) {
-  const r = size * 0.35;
-  ctx.beginPath();
-  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+function drawCreativity(ctx, cx, cy, size, color) {
+  // Top-left: small wave/tilde
+  ctx.save();
   ctx.strokeStyle = color;
-  ctx.lineWidth = size * 0.06;
+  ctx.lineWidth = size * 0.10;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(cx - size * 0.35, cy - size * 0.18);
+  ctx.quadraticCurveTo(cx - size * 0.2, cy - size * 0.3, cx - size * 0.05, cy - size * 0.18);
   ctx.stroke();
 
-  // 8 rays
+  // Central: S-curve from bottom-left to upper-right
+  ctx.beginPath();
+  ctx.moveTo(cx - size * 0.2, cy + size * 0.4);
+  ctx.quadraticCurveTo(cx - size * 0.3, cy + size * 0.05, cx, cy);
+  ctx.quadraticCurveTo(cx + size * 0.3, cy - size * 0.05, cx + size * 0.25, cy - size * 0.35);
+  ctx.stroke();
+
+  // Bottom-right: diamond lozenge shape
+  ctx.beginPath();
+  ctx.moveTo(cx + size * 0.25, cy - size * 0.35);
+  ctx.lineTo(cx + size * 0.42, cy - size * 0.1);
+  ctx.lineTo(cx + size * 0.25, cy + size * 0.18);
+  ctx.lineTo(cx + size * 0.08, cy - size * 0.1);
+  ctx.closePath();
+  ctx.stroke();
+
+  ctx.restore();
+}
+
+function drawSun(ctx, cx, cy, size, color) {
+  // Circle ring
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = size * 0.09;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.arc(cx, cy, size * 0.22, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // 8 rays (pill-shaped)
+  ctx.lineWidth = size * 0.085;
+  ctx.lineCap = 'round';
   for (let i = 0; i < 8; i++) {
     const angle = (i / 8) * Math.PI * 2;
-    const inner = r + size * 0.08;
-    const outer = r + size * 0.22;
+    const inner = size * 0.3;
+    const outer = size * 0.42;
     ctx.beginPath();
     ctx.moveTo(cx + Math.cos(angle) * inner, cy + Math.sin(angle) * inner);
     ctx.lineTo(cx + Math.cos(angle) * outer, cy + Math.sin(angle) * outer);
     ctx.stroke();
   }
+  ctx.restore();
 }
 
-function drawMoon(ctx, cx, cy, size, color) {
-  ctx.beginPath();
-  ctx.arc(cx - size * 0.12, cy, size * 0.3, 0, Math.PI * 2);
+function drawPaperAirplane(ctx, cx, cy, size, color) {
+  ctx.save();
   ctx.strokeStyle = color;
-  ctx.lineWidth = size * 0.06;
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.arc(cx + size * 0.08, cy, size * 0.22, 0, Math.PI * 2);
-  ctx.stroke();
-}
-
-function drawStar(ctx, cx, cy, size, color) {
-  const points = 5;
-  const outer = size * 0.4;
-  const inner = size * 0.18;
-  ctx.beginPath();
-  for (let i = 0; i < points * 2; i++) {
-    const r = i % 2 === 0 ? outer : inner;
-    const angle = (i / (points * 2)) * Math.PI * 2 - Math.PI / 2;
-    const x = cx + Math.cos(angle) * r;
-    const y = cy + Math.sin(angle) * r;
-    if (i === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
-  }
-  ctx.closePath();
-  ctx.strokeStyle = color;
-  ctx.lineWidth = size * 0.06;
+  ctx.lineWidth = size * 0.1;
+  ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
+
+  // Left wing
+  ctx.beginPath();
+  ctx.moveTo(cx - size * 0.35, cy + size * 0.15);
+  ctx.quadraticCurveTo(cx - size * 0.15, cy + size * 0.1, cx + size * 0.2, cy - size * 0.25);
   ctx.stroke();
+
+  // Bottom wing
+  ctx.beginPath();
+  ctx.moveTo(cx - size * 0.35, cy + size * 0.15);
+  ctx.lineTo(cx + size * 0.05, cy + size * 0.35);
+  ctx.stroke();
+
+  // Right body
+  ctx.beginPath();
+  ctx.moveTo(cx + size * 0.05, cy + size * 0.35);
+  ctx.quadraticCurveTo(cx + size * 0.2, cy + size * 0.1, cx + size * 0.2, cy - size * 0.25);
+  ctx.stroke();
+
+  // Inner fold line
+  ctx.lineWidth = size * 0.07;
+  ctx.beginPath();
+  ctx.moveTo(cx - size * 0.18, cy + size * 0.08);
+  ctx.lineTo(cx + size * 0.1, cy - size * 0.1);
+  ctx.stroke();
+
+  ctx.restore();
 }
 
-function drawCloud(ctx, cx, cy, size, color) {
-  ctx.beginPath();
-  ctx.arc(cx - size * 0.22, cy + size * 0.05, size * 0.2, 0, Math.PI * 2);
+function drawYoutube(ctx, cx, cy, size, color) {
+  ctx.save();
   ctx.strokeStyle = color;
-  ctx.lineWidth = size * 0.06;
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.arc(cx, cy - size * 0.1, size * 0.25, 0, Math.PI * 2);
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.arc(cx + size * 0.22, cy + size * 0.05, size * 0.2, 0, Math.PI * 2);
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.moveTo(cx - size * 0.38, cy + size * 0.1);
-  ctx.lineTo(cx + size * 0.38, cy + size * 0.1);
-  ctx.stroke();
-}
-
-function drawHeart(ctx, cx, cy, size, color) {
-  const top = cy - size * 0.05;
-  const height = size * 0.5;
-  ctx.beginPath();
-  ctx.moveTo(cx, top + height * 0.3);
-  ctx.bezierCurveTo(cx - height * 0.5, top, cx - height * 0.5, top + height * 0.5, cx, top + height * 0.8);
-  ctx.bezierCurveTo(cx + height * 0.5, top + height * 0.5, cx + height * 0.5, top, cx, top + height * 0.3);
-  ctx.strokeStyle = color;
-  ctx.lineWidth = size * 0.06;
-  ctx.stroke();
-}
-
-function drawBolt(ctx, cx, cy, size, color) {
-  ctx.beginPath();
-  ctx.moveTo(cx + size * 0.1, cy - size * 0.4);
-  ctx.lineTo(cx - size * 0.1, cy);
-  ctx.lineTo(cx + size * 0.05, cy);
-  ctx.lineTo(cx - size * 0.1, cy + size * 0.4);
-  ctx.lineTo(cx + size * 0.15, cy);
-  ctx.lineTo(cx - size * 0.05, cy);
-  ctx.closePath();
-  ctx.strokeStyle = color;
-  ctx.lineWidth = size * 0.06;
+  ctx.lineWidth = size * 0.09;
+  ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
+
+  // Rounded rectangle (screen)
+  const w = size * 0.7;
+  const h = size * 0.45;
+  ctx.beginPath();
+  ctx.roundRect(cx - w / 2, cy - h / 2, w, h, size * 0.12);
   ctx.stroke();
+
+  // Play button triangle (rounded corners)
+  ctx.beginPath();
+  const px = cx - size * 0.07;
+  const py = cy - size * 0.12;
+  const ps = size * 0.22;
+  ctx.moveTo(px - ps * 0.4, py - ps * 0.35);
+  ctx.lineTo(px - ps * 0.4, py + ps * 0.35);
+  ctx.lineTo(px + ps * 0.55, py);
+  ctx.closePath();
+  ctx.stroke();
+
+  ctx.restore();
 }
 
-function drawDrop(ctx, cx, cy, size, color) {
-  ctx.beginPath();
-  ctx.moveTo(cx, cy - size * 0.4);
-  ctx.bezierCurveTo(cx + size * 0.4, cy, cx + size * 0.3, cy + size * 0.35, cx, cy + size * 0.4);
-  ctx.bezierCurveTo(cx - size * 0.3, cy + size * 0.35, cx - size * 0.4, cy, cx, cy - size * 0.4);
+function drawMail(ctx, cx, cy, size, color) {
+  ctx.save();
   ctx.strokeStyle = color;
-  ctx.lineWidth = size * 0.06;
+  ctx.lineWidth = size * 0.09;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  // Envelope body
+  const w = size * 0.7;
+  const h = size * 0.48;
+  ctx.beginPath();
+  ctx.roundRect(cx - w / 2, cy - h / 2, w, h, size * 0.1);
   ctx.stroke();
+
+  // Flap V shape
+  ctx.beginPath();
+  ctx.moveTo(cx - w * 0.42, cy - h * 0.15);
+  ctx.lineTo(cx, cy + h * 0.25);
+  ctx.lineTo(cx + w * 0.42, cy - h * 0.15);
+  ctx.stroke();
+
+  ctx.restore();
 }
 
-function drawLeaf(ctx, cx, cy, size, color) {
-  ctx.beginPath();
-  ctx.moveTo(cx, cy - size * 0.4);
-  ctx.bezierCurveTo(cx + size * 0.45, cy - size * 0.2, cx + size * 0.35, cy + size * 0.35, cx, cy + size * 0.4);
-  ctx.bezierCurveTo(cx - size * 0.35, cy + size * 0.35, cx - size * 0.45, cy - size * 0.2, cx, cy - size * 0.4);
+function drawInstagram(ctx, cx, cy, size, color) {
+  ctx.save();
   ctx.strokeStyle = color;
-  ctx.lineWidth = size * 0.06;
+  ctx.lineWidth = size * 0.09;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  // Rounded square outer
+  ctx.beginPath();
+  ctx.roundRect(cx - size * 0.38, cx - size * 0.38, size * 0.76, size * 0.76, size * 0.16);
   ctx.stroke();
 
+  // Actually: use proper centering
+  const s = size * 0.76;
   ctx.beginPath();
-  ctx.moveTo(cx, cy - size * 0.4);
-  ctx.bezierCurveTo(cx + size * 0.1, cy, cx - size * 0.1, cy + size * 0.1, cx, cy + size * 0.4);
-  ctx.stroke();
-}
-
-function drawFlame(ctx, cx, cy, size, color) {
-  ctx.beginPath();
-  ctx.moveTo(cx, cy - size * 0.42);
-  ctx.bezierCurveTo(cx + size * 0.2, cy - size * 0.2, cx + size * 0.18, cy + size * 0.1, cx, cy + size * 0.42);
-  ctx.bezierCurveTo(cx - size * 0.18, cy + size * 0.1, cx - size * 0.2, cy - size * 0.2, cx, cy - size * 0.42);
-  ctx.strokeStyle = color;
-  ctx.lineWidth = size * 0.06;
+  ctx.roundRect(cx - s / 2, cy - s / 2, s, s, size * 0.16);
   ctx.stroke();
 
+  // Center ring
   ctx.beginPath();
-  ctx.moveTo(cx, cy - size * 0.15);
-  ctx.bezierCurveTo(cx + size * 0.1, cy, cx + size * 0.08, cy + size * 0.15, cx, cy + size * 0.25);
-  ctx.bezierCurveTo(cx - size * 0.08, cy + size * 0.15, cx - size * 0.1, cy, cx, cy - size * 0.15);
+  ctx.arc(cx, cy, size * 0.22, 0, Math.PI * 2);
   ctx.stroke();
+
+  // Small dot upper-right
+  ctx.beginPath();
+  ctx.arc(cx + size * 0.22, cy - size * 0.22, size * 0.06, 0, Math.PI * 2);
+  ctx.fillStyle = color;
+  ctx.fill();
+
+  ctx.restore();
 }
 
 function drawCompass(ctx, cx, cy, size, color) {
-  const r = size * 0.38;
-  ctx.beginPath();
-  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.save();
   ctx.strokeStyle = color;
-  ctx.lineWidth = size * 0.05;
+  ctx.lineWidth = size * 0.07;
+  ctx.lineCap = 'round';
+
+  // Outer circle
+  ctx.beginPath();
+  ctx.arc(cx, cy, size * 0.38, 0, Math.PI * 2);
   ctx.stroke();
 
-  // N/S/E/W ticks
+  // N/S/E/W tick marks
   for (let i = 0; i < 4; i++) {
     const angle = (i / 4) * Math.PI * 2 - Math.PI / 2;
+    ctx.lineWidth = size * 0.1;
     ctx.beginPath();
-    ctx.moveTo(cx + Math.cos(angle) * r * 0.7, cy + Math.sin(angle) * r * 0.7);
-    ctx.lineTo(cx + Math.cos(angle) * r * 0.9, cy + Math.sin(angle) * r * 0.9);
-    ctx.strokeStyle = color;
-    ctx.lineWidth = size * 0.06;
+    ctx.moveTo(cx + Math.cos(angle) * size * 0.28, cy + Math.sin(angle) * size * 0.28);
+    ctx.lineTo(cx + Math.cos(angle) * size * 0.38, cy + Math.sin(angle) * size * 0.38);
     ctx.stroke();
+    ctx.lineWidth = size * 0.07;
   }
+
+  // Inner circle
+  ctx.beginPath();
+  ctx.arc(cx, cy, size * 0.15, 0, Math.PI * 2);
+  ctx.stroke();
 
   // Center dot
   ctx.beginPath();
   ctx.arc(cx, cy, size * 0.05, 0, Math.PI * 2);
   ctx.fillStyle = color;
   ctx.fill();
+
+  ctx.restore();
 }
 
-function drawCross(ctx, cx, cy, size, color) {
+function drawHaze(ctx, cx, cy, size, color) {
+  ctx.save();
   ctx.strokeStyle = color;
-  ctx.lineWidth = size * 0.08;
+  ctx.lineWidth = size * 0.09;
   ctx.lineCap = 'round';
-  ctx.beginPath();
-  ctx.moveTo(cx, cy - size * 0.38);
-  ctx.lineTo(cx, cy + size * 0.38);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(cx - size * 0.38, cy);
-  ctx.lineTo(cx + size * 0.38, cy);
-  ctx.stroke();
-}
 
-function drawCircle(ctx, cx, cy, size, color) {
-  ctx.beginPath();
-  ctx.arc(cx, cy, size * 0.38, 0, Math.PI * 2);
-  ctx.strokeStyle = color;
-  ctx.lineWidth = size * 0.06;
-  ctx.stroke();
-}
+  // Wavy horizontal lines (like fog/haze)
+  for (let i = 0; i < 3; i++) {
+    const y = cy - size * 0.22 + i * size * 0.22;
+    ctx.beginPath();
+    ctx.moveTo(cx - size * 0.38, y);
+    ctx.quadraticCurveTo(cx - size * 0.2, y - size * 0.08, cx, y);
+    ctx.quadraticCurveTo(cx + size * 0.2, y + size * 0.08, cx + size * 0.38, y);
+    ctx.stroke();
+  }
 
-function drawTriangle(ctx, cx, cy, size, color) {
-  ctx.beginPath();
-  ctx.moveTo(cx, cy - size * 0.38);
-  ctx.lineTo(cx + size * 0.33, cy + size * 0.3);
-  ctx.lineTo(cx - size * 0.33, cy + size * 0.3);
-  ctx.closePath();
-  ctx.strokeStyle = color;
-  ctx.lineWidth = size * 0.06;
-  ctx.lineJoin = 'round';
-  ctx.stroke();
-}
-
-function drawSquare(ctx, cx, cy, size, color) {
-  const half = size * 0.32;
-  ctx.strokeRect(cx - half, cy - half, half * 2, half * 2);
-  ctx.strokeStyle = color;
-  ctx.lineWidth = size * 0.06;
-  ctx.stroke();
-}
-
-function drawDiamond(ctx, cx, cy, size, color) {
-  ctx.beginPath();
-  ctx.moveTo(cx, cy - size * 0.38);
-  ctx.lineTo(cx + size * 0.38, cy);
-  ctx.lineTo(cx, cy + size * 0.38);
-  ctx.lineTo(cx - size * 0.38, cy);
-  ctx.closePath();
-  ctx.strokeStyle = color;
-  ctx.lineWidth = size * 0.06;
-  ctx.lineJoin = 'round';
-  ctx.stroke();
+  ctx.restore();
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   Icon registry
+   Icon registry (in the order you uploaded them)
    ───────────────────────────────────────────────────────────────────────────── */
 const DRAW_FNS = [
-  drawSun, drawMoon, drawStar, drawCloud, drawHeart,
-  drawBolt, drawDrop, drawLeaf, drawFlame, drawCompass,
-  drawCross, drawCircle, drawTriangle, drawSquare, drawDiamond,
-];
-
-const ICON_NAMES = [
-  'sun', 'moon', 'star', 'cloud', 'heart',
-  'bolt', 'drop', 'leaf', 'flame', 'compass',
-  'cross', 'circle', 'triangle', 'square', 'diamond',
+  drawCreativity,   // 創意/塗鴉筆觸
+  drawCompass,      // 羅盤
+  drawHaze,          // 霧/朦朧
+  drawSun,           // 夏天/太陽
+  drawPaperAirplane, // 發送/飛機
+  drawYoutube,       // 影片
+  drawMail,          // 郵件
+  drawInstagram,     // IG
 ];
 
 /* ─────────────────────────────────────────────────────────────────────────────
    Non-overlapping layout generation
    ───────────────────────────────────────────────────────────────────────────── */
-function hasOverlap(ax, ay, ar, bx, by, br, minGap = 8) {
+function hasOverlap(ax, ay, ar, bx, by, br, minGap = 12) {
   const dx = ax - bx;
   const dy = ay - by;
   return Math.sqrt(dx * dx + dy * dy) < ar + br + minGap;
@@ -253,15 +259,14 @@ function hasOverlap(ax, ay, ar, bx, by, br, minGap = 8) {
 
 function generateLayout(canvasW, canvasH, iconSize) {
   const icons = [];
-  const targetCount = Math.floor((canvasW * canvasH) / (iconSize * iconSize) * 0.25);
+  const targetCount = Math.floor((canvasW * canvasH) / (iconSize * iconSize) * 0.2);
   const maxAttempts = 100;
 
   for (let i = 0; i < targetCount; i++) {
-    let placed = false;
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
       const x = iconSize * 0.5 + Math.random() * (canvasW - iconSize);
       const y = iconSize * 0.5 + Math.random() * (canvasH - iconSize);
-      const size = iconSize * (0.55 + Math.random() * 0.5);
+      const size = iconSize * (0.6 + Math.random() * 0.5);
       const rotation = Math.random() * 360;
       const drawFn = DRAW_FNS[Math.floor(Math.random() * DRAW_FNS.length)];
 
@@ -275,7 +280,6 @@ function generateLayout(canvasW, canvasH, iconSize) {
 
       if (!overlaps) {
         icons.push({ x, y, size, rotation, drawFn });
-        placed = true;
         break;
       }
     }
