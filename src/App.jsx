@@ -637,9 +637,12 @@ function App() {
 
           {/* Center - Game Area */}
           <main className="game-area">
-            {/* Top Bar */}
+            {/* Game Title - Above everything */}
+            <div className="game-title-block">Pictionary</div>
+
+            {/* Top Bar (timer + word hint) */}
             <div className="game-top-bar">
-              <div className="game-title">Pictionary</div>
+              <GameHeader timeLeft={timeLeft} wordHint={displayWordHint} />
               <div className="game-status-icons">
                 <PingIndicator ping={42} />
                 <ThemeToggle theme={theme} onToggle={toggleTheme} />
@@ -647,8 +650,6 @@ function App() {
             </div>
 
             {/* Canvas Card */}
-            <div className={`canvas-card card ${canvasEffect || isEffectIncoming ? 'attack-effect--active' : ''}`}>
-              <GameHeader timeLeft={timeLeft} wordHint={displayWordHint} />
               <DrawingCanvas
                 ref={canvasRef}
                 tool={tool}
