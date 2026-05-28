@@ -650,6 +650,7 @@ function App() {
             </div>
 
             {/* Canvas Card */}
+            <div className={`canvas-card card ${canvasEffect || isEffectIncoming ? 'attack-effect--active' : ''}`}>
               <DrawingCanvas
                 ref={canvasRef}
                 tool={tool}
