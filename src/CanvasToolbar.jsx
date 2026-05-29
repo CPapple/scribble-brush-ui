@@ -19,9 +19,27 @@ function CanvasToolbar({ tool, brushSize, onToolChange, onSizeChange }) {
       zIndex: 10,
       backdropFilter: 'blur(4px)'
     }}>
-      {/* 橡皮擦切換按鈕 */}
+      {/* 畫筆按鈕 */}
       <button
-        onClick={() => onToolChange(tool === 'eraser' ? 'brush' : 'eraser')}
+        onClick={() => onToolChange('brush')}
+        style={{
+          background: 'none',
+          border: 'none',
+          fontSize: '20px',
+          cursor: 'pointer',
+          padding: '4px',
+          borderRadius: '50%',
+          backgroundColor: tool === 'brush' ? 'rgba(0, 123, 255, 0.1)' : 'transparent',
+          transition: 'background-color 0.2s'
+        }}
+        title="畫筆"
+      >
+        🖌️
+      </button>
+      
+      {/* 橡皮擦按鈕 */}
+      <button
+        onClick={() => onToolChange('eraser')}
         style={{
           background: 'none',
           border: 'none',
@@ -32,9 +50,9 @@ function CanvasToolbar({ tool, brushSize, onToolChange, onSizeChange }) {
           backgroundColor: tool === 'eraser' ? 'rgba(0, 123, 255, 0.1)' : 'transparent',
           transition: 'background-color 0.2s'
         }}
-        title={tool === 'eraser' ? '切換到畫筆' : '切換到橡皮擦'}
+        title="橡皮擦"
       >
-        {tool === 'eraser' ? '🖌️' : '🧹'}
+        🧹
       </button>
       
       {/* 筆刷大小選擇 */}
@@ -48,23 +66,22 @@ function CanvasToolbar({ tool, brushSize, onToolChange, onSizeChange }) {
               height: '24px',
               borderRadius: '50%',
               border: '2px solid #333',
-              backgroundColor: brushSize === size ? '#333' : 'transparent',
+              backgroundColor: 'transparent',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '10px'
+              position: 'relative'
             }}
             title={`筆刷大小: ${size}px`}
           >
-            {brushSize === size && (
-              <div style={{
-                width: `${size/3}px`,
-                height: `${size/3}px`,
-                borderRadius: '50%',
-                backgroundColor: '#333'
-              }} />
-            )}
+            {/* 顯示實際大小的圓形 */}
+            <div style={{
+              width: `${size}px`,
+              height: `${size}px`,
+              borderRadius: '50%',
+              backgroundColor: brushSize === size ? '#333' : '#ccc'
+            }} />
           </button>
         ))}
       </div>
