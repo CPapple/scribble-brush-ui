@@ -709,11 +709,13 @@ function App() {
               onClick={() => {
                 // 模擬卡頓卡攻擊效果
                 console.log('Testing card:', ATTACK_CARDS[2].id, ATTACK_CARDS[2].effectClass);
+                console.log('Setting canvas effect to:', ATTACK_CARDS[2].effectClass || '');
                 setCanvasEffect(ATTACK_CARDS[2].effectClass || '');
                 setActiveEffect(ATTACK_CARDS[2]);
                 
                 // 8秒後清除效果
                 setTimeout(() => {
+                  console.log('Clearing canvas effect');
                   setCanvasEffect('');
                   setActiveEffect(null);
                 }, 8000);
@@ -802,7 +804,7 @@ function App() {
                 onDrawEnd={handlePointerUp}
               />
               {/* Canvas effects overlay */}
-              <div className="canvas-effect-overlay" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', transition: 'opacity var(--transition-normal)' }}></div>
+              <div className={`canvas-effect-overlay ${canvasEffect}`} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', transition: 'opacity var(--transition-normal)' }}></div>
               {/* Unified Tool Panel inside canvas */}
               <div style={{
                 position: 'absolute',
