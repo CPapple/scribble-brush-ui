@@ -528,7 +528,7 @@ body {
 }
 
 /* FPS drop effect */
-.canvas-effect--lag .canvas-wrapper {
+.canvas-effect--lag .canvas-effect-overlay {
   animation: fps-drop 0.5s steps(2) infinite;
 }
 
@@ -538,13 +538,13 @@ body {
 }
 
 /* Water break effect */
-.canvas-effect--water-break .canvas-wrapper canvas {
+.canvas-effect--water-break .canvas-effect-overlay {
   filter: saturate(0.3) brightness(0.9);
   transition: filter 0.3s;
 }
 
 /* Brush突变 effect */
-.canvas-effect--brush-mutation .canvas-wrapper canvas {
+.canvas-effect--brush-mutation .canvas-effect-overlay {
   animation: brush-jitter 0.1s steps(3) infinite;
 }
 
@@ -580,7 +580,7 @@ body {
 }
 
 /* Shake effect */
-.canvas-effect--shake .canvas-wrapper {
+.canvas-effect--shake .canvas-effect-overlay {
   animation: shake 0.05s infinite;
 }
 
@@ -605,7 +605,7 @@ body {
 }
 
 /* Reverse effect */
-.canvas-effect--reverse .canvas-wrapper canvas {
+.canvas-effect--reverse .canvas-effect-overlay {
   filter: hue-rotate(180deg) invert(1);
   transition: filter 0.5s;
 }
