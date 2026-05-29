@@ -745,7 +745,7 @@ function App() {
             </div>
 
             {/* Canvas Card */}
-            <div className={`canvas-card card ${canvasEffect || isEffectIncoming ? 'attack-effect--active' : ''} ${canvasEffect || ''}`}>
+            <div className={`canvas-card card ${canvasEffect || isEffectIncoming ? 'attack-effect--active' : ''} ${canvasEffect ? canvasEffect : ''}`} style={{ position: 'relative', overflow: 'hidden' }}>
               <DrawingCanvas
                 ref={canvasRef}
                 tool={tool}
@@ -758,6 +758,8 @@ function App() {
                 onDrawMove={handlePointerMove}
                 onDrawEnd={handlePointerUp}
               />
+              {/* Canvas effects overlay */}
+              <div className="canvas-effect-overlay" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', transition: 'opacity var(--transition-normal)' }}></div>
               <Toolbar
                 tool={tool}
                 brushColor={brushColor}
