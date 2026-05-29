@@ -688,14 +688,15 @@ function App() {
               key={card.id}
               onClick={() => {
                 // 模擬卡牌攻擊效果
-                setCanvasEffect(card.effectClass);
+                console.log('Testing card:', card.id, card.effectClass);  // 添加調試日誌
+                setCanvasEffect(card.effectClass || '');
                 if (card.flipHorizontal) setFlipH(true);
                 if (card.flipVertical) setFlipV(true);
                 setActiveEffect(card);
                 
                 // 8秒後清除效果
                 setTimeout(() => {
-                  setCanvasEffect(null);
+                  setCanvasEffect('');
                   setFlipH(false);
                   setFlipV(false);
                   setActiveEffect(null);
@@ -744,7 +745,7 @@ function App() {
             </div>
 
             {/* Canvas Card */}
-            <div className={`canvas-card card ${canvasEffect || isEffectIncoming ? 'attack-effect--active' : ''}`}>
+            <div className={`canvas-card card ${canvasEffect || isEffectIncoming ? 'attack-effect--active' : ''} ${canvasEffect || ''}`}>
               <DrawingCanvas
                 ref={canvasRef}
                 tool={tool}
