@@ -87,8 +87,8 @@ const DrawingCanvas = forwardRef(function DrawingCanvas({
     // 添加卡頓效果延遲
     if (canvasEffect === 'canvas-effect--lag') {
       // 模擬卡頓延遲 - 延長延遲時間
-      const delay = Math.random() * 150;  // 從 50 增加到 150
-      if (delay > 50) {  // 從 25 調整到 50
+      const delay = Math.random() * 230;  // 從 150 增加到 230
+      if (delay > 80) {  // 從 50 調整到 80
         // 偶爾添加較長延遲來模擬卡頓
         const start = Date.now();
         while (Date.now() - start < delay) {
@@ -120,8 +120,8 @@ const DrawingCanvas = forwardRef(function DrawingCanvas({
     // 添加卡頓效果延遲
     if (canvasEffect === 'canvas-effect--lag') {
       // 模擬卡頓延遲 - 延長延遲時間
-      const delay = Math.random() * 150;  // 從 50 增加到 150
-      if (delay > 50) {  // 從 25 調整到 50
+      const delay = Math.random() * 230;  // 從 150 增加到 230
+      if (delay > 80) {  // 從 50 調整到 80
         // 偶爾添加較長延遲來模擬卡頓
         const start = Date.now();
         while (Date.now() - start < delay) {
