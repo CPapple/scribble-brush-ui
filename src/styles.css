@@ -188,7 +188,7 @@ body {
   width: 100%;
   max-width: 1400px;
   height: var(--app-layout-height);
-  max-height: 1000px;  /* 調整為1000px最大高度 */
+  max-height: 920px;  /* 從 1000px 減少到 920px */
 }
 
 /* ==========================================================================
