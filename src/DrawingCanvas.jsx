@@ -84,6 +84,19 @@ const DrawingCanvas = forwardRef(function DrawingCanvas({
 
   // ── Draw a dot ───────────────────────────────────────────────────────────
   const drawDot = useCallback((pos) => {
+    // 添加卡頓效果延遲
+    if (canvasEffect === 'canvas-effect--lag') {
+      // 模擬卡頓延遲
+      const delay = Math.random() * 50;
+      if (delay > 25) {
+        // 偶爾添加較長延遲來模擬卡頓
+        const start = Date.now();
+        while (Date.now() - start < delay) {
+          // 空循環模擬阻塞
+        }
+      }
+    }
+    
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -100,10 +113,23 @@ const DrawingCanvas = forwardRef(function DrawingCanvas({
     ctx.arc(pos.px, pos.py, brushSize / 2, 0, Math.PI * 2);
     ctx.fill();
     ctx.globalCompositeOperation = 'source-over';
-  }, [brushColor, brushSize, tool]);
+  }, [brushColor, brushSize, tool, canvasEffect]);
 
   // ── Draw a line ───────────────────────────────────────────────────────────
   const drawLine = useCallback((from, to) => {
+    // 添加卡頓效果延遲
+    if (canvasEffect === 'canvas-effect--lag') {
+      // 模擬卡頓延遲
+      const delay = Math.random() * 50;
+      if (delay > 25) {
+        // 偶爾添加較長延遲來模擬卡頓
+        const start = Date.now();
+        while (Date.now() - start < delay) {
+          // 空循環模擬阻塞
+        }
+      }
+    }
+    
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -122,7 +148,7 @@ const DrawingCanvas = forwardRef(function DrawingCanvas({
     ctx.lineTo(to.px, to.py);
     ctx.stroke();
     ctx.globalCompositeOperation = 'source-over';
-  }, [brushColor, brushSize, tool]);
+  }, [brushColor, brushSize, tool, canvasEffect]);
 
   // ── Pointer Events ───────────────────────────────────────────────────────
   const handlePointerDown = useCallback((e) => {
