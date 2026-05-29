@@ -809,38 +809,74 @@ function App() {
                 onToolChange={setTool}
                 onSizeChange={setBrushSize}
               />
-              {/* Color Picker inside canvas */}
+              {/* Color and Size Picker inside canvas */}
               <div style={{
                 position: 'absolute',
                 bottom: '60px',
                 left: '50%',
                 transform: 'translateX(-50%)',
                 display: 'flex',
-                gap: '8px',
-                padding: '6px 12px',
+                gap: '12px',
+                padding: '8px 16px',
                 backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                borderRadius: '20px',
+                borderRadius: '24px',
                 boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
                 zIndex: 10,
-                backdropFilter: 'blur(4px)'
+                backdropFilter: 'blur(4px)',
+                alignItems: 'center'
               }}>
-                {limitedColors.map((c) => (
-                  <div
-                    key={c}
-                    onClick={() => setBrushColor(c)}
-                    style={{
-                      width: '24px',
-                      height: '24px',
-                      borderRadius: '50%',
-                      backgroundColor: c,
-                      cursor: 'pointer',
-                      border: brushColor === c ? '2px solid #333' : '2px solid transparent',
-                      transition: 'all 0.2s',
-                      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.2)'
-                    }}
-                    title={`顏色 ${c}`}
-                  />
-                ))}
+                {/* Color Picker */}
+                <div style={{ display: 'flex', gap: '6px' }}>
+                  {limitedColors.map((c) => (
+                    <div
+                      key={c}
+                      onClick={() => setBrushColor(c)}
+                      style={{
+                        width: '28px',
+                        height: '28px',
+                        borderRadius: '50%',
+                        backgroundColor: c,
+                        cursor: 'pointer',
+                        border: brushColor === c ? '3px solid #333' : '2px solid transparent',
+                        transition: 'all 0.2s',
+                        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.2)'
+                      }}
+                      title={`顏色 ${c}`}
+                    />
+                  ))}
+                </div>
+                <div style={{ width: '1px', backgroundColor: '#ddd', margin: '0 8px' }}></div>
+                {/* Brush Sizes */}
+                <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                  {[4, 8, 12, 20].map((size) => (
+                    <button
+                      key={size}
+                      onClick={() => setBrushSize(size)}
+                      style={{
+                        width: '32px',
+                        height: '32px',
+                        borderRadius: '50%',
+                        border: brushSize === size ? '2px solid #333' : '1px solid #999',
+                        backgroundColor: 'white',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        position: 'relative',
+                        boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)'
+                      }}
+                      title={`筆刷大小: ${size}px`}
+                    >
+                      {/* 顯示實際大小的圓形 */}
+                      <div style={{
+                        width: `${size}px`,
+                        height: `${size}px`,
+                        borderRadius: '50%',
+                        backgroundColor: '#333'
+                      }} />
+                    </button>
+                  ))}
+                </div>
               </div>
               <Toolbar
                 tool={tool}
