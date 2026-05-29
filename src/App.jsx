@@ -675,30 +675,72 @@ function App() {
         </div>
         <div style={{ marginTop: 10 }}>
           <h4>測試卡牌效果:</h4>
-          {ATTACK_CARDS.slice(10).map((card) => (
+          <div style={{ marginBottom: 10 }}>
+            <h5>常用效果:</h5>
             <button 
-              key={card.id}
+              key={ATTACK_CARDS[0].id}
               onClick={() => {
-                // 模擬卡牌攻擊效果
-                console.log('Testing card:', card.id, card.effectClass);  // 添加調試日誌
-                setCanvasEffect(card.effectClass || '');
-                if (card.flipHorizontal) setFlipH(true);
-                if (card.flipVertical) setFlipV(true);
-                setActiveEffect(card);
+                // 模擬模糊卡攻擊效果
+                console.log('Testing card:', ATTACK_CARDS[0].id, ATTACK_CARDS[0].effectClass);
+                setCanvasEffect(ATTACK_CARDS[0].effectClass || '');
+                setActiveEffect(ATTACK_CARDS[0]);
                 
                 // 8秒後清除效果
                 setTimeout(() => {
                   setCanvasEffect('');
-                  setFlipH(false);
-                  setFlipV(false);
                   setActiveEffect(null);
                 }, 8000);
               }}
               style={{ margin: 5, padding: '5px 10px', fontSize: '12px' }}
             >
-              {card.icon} {card.name}
+              {ATTACK_CARDS[0].icon} {ATTACK_CARDS[0].name}
             </button>
-          ))}
+            <button 
+              key={ATTACK_CARDS[2].id}
+              onClick={() => {
+                // 模擬卡頓卡攻擊效果
+                console.log('Testing card:', ATTACK_CARDS[2].id, ATTACK_CARDS[2].effectClass);
+                setCanvasEffect(ATTACK_CARDS[2].effectClass || '');
+                setActiveEffect(ATTACK_CARDS[2]);
+                
+                // 8秒後清除效果
+                setTimeout(() => {
+                  setCanvasEffect('');
+                  setActiveEffect(null);
+                }, 8000);
+              }}
+              style={{ margin: 5, padding: '5px 10px', fontSize: '12px' }}
+            >
+              {ATTACK_CARDS[2].icon} {ATTACK_CARDS[2].name}
+            </button>
+          </div>
+          <div>
+            <h5>其他效果:</h5>
+            {ATTACK_CARDS.slice(10).map((card) => (
+              <button 
+                key={card.id}
+                onClick={() => {
+                  // 模擬卡牌攻擊效果
+                  console.log('Testing card:', card.id, card.effectClass);  // 添加調試日誌
+                  setCanvasEffect(card.effectClass || '');
+                  if (card.flipHorizontal) setFlipH(true);
+                  if (card.flipVertical) setFlipV(true);
+                  setActiveEffect(card);
+                  
+                  // 8秒後清除效果
+                  setTimeout(() => {
+                    setCanvasEffect('');
+                    setFlipH(false);
+                    setFlipV(false);
+                    setActiveEffect(null);
+                  }, 8000);
+                }}
+                style={{ margin: 5, padding: '5px 10px', fontSize: '12px' }}
+              >
+                {card.icon} {card.name}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
