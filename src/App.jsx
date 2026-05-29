@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import DrawingCanvas from './DrawingCanvas.jsx';
+import CanvasToolbar from './CanvasToolbar.jsx';
 import BackgroundLayer from './BackgroundLayer.jsx';
 import './styles.css';
 
@@ -751,6 +752,13 @@ function App() {
               />
               {/* Canvas effects overlay */}
               <div className="canvas-effect-overlay" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', transition: 'opacity var(--transition-normal)' }}></div>
+              {/* Canvas Toolbar */}
+              <CanvasToolbar 
+                tool={tool}
+                brushSize={brushSize}
+                onToolChange={setTool}
+                onSizeChange={setBrushSize}
+              />
               <Toolbar
                 tool={tool}
                 brushColor={brushColor}
