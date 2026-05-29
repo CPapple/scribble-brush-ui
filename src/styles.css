@@ -509,7 +509,7 @@ body {
 
 /* Blur effect */
 .canvas-effect--blur .canvas-effect-overlay {
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(15px);
   background: rgba(255, 255, 255, 0.2);
 }
 
