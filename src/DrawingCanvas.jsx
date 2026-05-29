@@ -26,6 +26,10 @@ const DrawingCanvas = forwardRef(function DrawingCanvas({
   const isDrawingRef = useRef(false);
   const lastPosRef = useRef(null);
   const undoStackRef = useRef([]);
+  // 添加吉躁筆刷相關引用
+  const brushImageRef = useRef(null);
+  const lastDrawTimeRef = useRef(0);  // 用於控制筆刷間隔
+  const lastBrushPosRef = useRef(null);  // 用於記錄最後筆刷位置
 
   // ── Expose canvas methods to parent ─────────────────────────────────────
   useImperativeHandle(ref, () => ({
@@ -97,6 +101,16 @@ const DrawingCanvas = forwardRef(function DrawingCanvas({
       }
     }
     
+    // 控制吉躁筆刷的稀疏度
+    if (canvasEffect === 'canvas-effect--noise') {
+      const now = Date.now();
+      // 每 100 毫秒只繪製一次筆刷點，讓筆刷點稀疏可見
+      if (now - lastDrawTimeRef.current < 100) {
+        return; // 跳過這次繪製
+      }
+      lastDrawTimeRef.current = now;
+    }
+    
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -107,13 +121,36 @@ const DrawingCanvas = forwardRef(function DrawingCanvas({
       ctx.fillStyle = 'rgba(0,0,0,1)';
     } else {
       ctx.globalCompositeOperation = 'source-over';
-      ctx.fillStyle = brushColor;
+      // 檢查是否使用吉躁筆刷圖案
+      if (brushImageRef.current && canvasEffect === 'canvas-effect--noise') {
+        // 使用圖片筆刷
+        const pattern = ctx.createPattern(brushImageRef.current, 'repeat');
+        ctx.fillStyle = pattern;
+      } else {
+        // 使用普通顏色筆刷
+        ctx.fillStyle = brushColor;
+      }
     }
     ctx.beginPath();
     ctx.arc(pos.px, pos.py, brushSize / 2, 0, Math.PI * 2);
     ctx.fill();
     ctx.globalCompositeOperation = 'source-over';
   }, [brushColor, brushSize, tool, canvasEffect]);
+
+  // ── 處理吉躁特效筆刷圖案 ───────────────────────────────────────────────
+  useEffect(() => {
+    if (canvasEffect === 'canvas-effect--noise') {
+      // 當激活吉躁特效時，加載 little8.png 作為筆刷圖案
+      const img = new Image();
+      img.src = '/noise/little8.png';
+      img.onload = () => {
+        brushImageRef.current = img;
+      };
+    } else {
+      // 當沒有激活吉躁特效時，清除筆刷圖案
+      brushImageRef.current = null;
+    }
+  }, [canvasEffect]);
 
   // ── Draw a line ───────────────────────────────────────────────────────────
   const drawLine = useCallback((from, to) => {
@@ -128,6 +165,48 @@ const DrawingCanvas = forwardRef(function DrawingCanvas({
           // 空循環模擬阻塞
         }
       }
+    }
+    
+    // 控制吉躁筆刷的稀疏度
+    if (canvasEffect === 'canvas-effect--noise') {
+      const now = Date.now();
+      // 每 100 毫秒只繪製一次筆刷點，讓筆刷點稀疏可見
+      if (now - lastDrawTimeRef.current < 100) {
+        return; // 跳過這次繪製
+      }
+      lastDrawTimeRef.current = now;
+      
+      // 對於線條繪製，我們在線條中間點繪製一個筆刷點
+      const midPoint = {
+        px: (from.px + to.px) / 2,
+        py: (from.py + to.py) / 2
+      };
+      
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      if (tool === 'eraser') {
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.fillStyle = 'rgba(0,0,0,1)';
+      } else {
+        ctx.globalCompositeOperation = 'source-over';
+        // 檢查是否使用吉躁筆刷圖案
+        if (brushImageRef.current && canvasEffect === 'canvas-effect--noise') {
+          // 使用圖片筆刷
+          const pattern = ctx.createPattern(brushImageRef.current, 'repeat');
+          ctx.fillStyle = pattern;
+        } else {
+          // 使用普通顏色筆刷
+          ctx.fillStyle = brushColor;
+        }
+      }
+      ctx.beginPath();
+      ctx.arc(midPoint.px, midPoint.py, brushSize / 2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalCompositeOperation = 'source-over';
+      return;
     }
     
     const canvas = canvasRef.current;
