@@ -140,6 +140,20 @@ const ATTACK_CARDS = [
   },
 ];
 
+// ─── Sound Effects ────────────────────────────────────────────────────────────
+// 音效播放函數
+const playCardSound = () => {
+  try {
+    const audio = new Audio('/sound/card/dragon-studio-thud-sound-effect-405470.mp3');
+    audio.volume = 0.7; // 設置音量
+    audio.play().catch(error => {
+      console.log('音效播放失敗:', error);
+    });
+  } catch (error) {
+    console.log('音效初始化失敗:', error);
+  }
+};
+
 // ─── Theme Toggle ────────────────────────────────────────────────────────────
 function PingIndicator({ ping }) {
   let level = 'good';
@@ -694,6 +708,8 @@ function App() {
               onClick={() => {
                 // 模擬模糊卡攻擊效果
                 console.log('Testing card:', ATTACK_CARDS[0].id, ATTACK_CARDS[0].effectClass);
+                // 播放卡牌音效
+                playCardSound();
                 // 觸發卡牌動畫
                 setAnimatedCard(ATTACK_CARDS[0]);
                 setShowCardAnimation(true);
@@ -718,6 +734,8 @@ function App() {
                 // 模擬卡頓卡攻擊效果
                 console.log('Testing card:', ATTACK_CARDS[2].id, ATTACK_CARDS[2].effectClass);
                 console.log('Setting canvas effect to:', ATTACK_CARDS[2].effectClass || '');
+                // 播放卡牌音效
+                playCardSound();
                 // 觸發卡牌動畫
                 setAnimatedCard(ATTACK_CARDS[2]);
                 setShowCardAnimation(true);
@@ -743,6 +761,8 @@ function App() {
                 // 模擬鏡像卡攻擊效果
                 console.log('Testing card:', ATTACK_CARDS[10].id, ATTACK_CARDS[10].effectClass);
                 console.log('Canvas effect class:', ATTACK_CARDS[10].effectClass || '');
+                // 播放卡牌音效
+                playCardSound();
                 // 觸發卡牌動畫
                 setAnimatedCard(ATTACK_CARDS[10]);
                 setShowCardAnimation(true);
@@ -772,6 +792,8 @@ function App() {
                 // 模擬噪點卡攻擊效果
                 console.log('Testing card:', ATTACK_CARDS[12].id, ATTACK_CARDS[12].effectClass);
                 console.log('Canvas effect class:', ATTACK_CARDS[12].effectClass || '');
+                // 播放卡牌音效
+                playCardSound();
                 // 觸發卡牌動畫
                 setAnimatedCard(ATTACK_CARDS[12]);
                 setShowCardAnimation(true);
