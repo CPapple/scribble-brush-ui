@@ -653,11 +653,10 @@ function App() {
                 src="/logol1.png" 
                 alt="遊戲 Logo" 
                 style={{ 
-                  height: '100%', 
+                  height: 'var(--game-title-height)', 
                   width: 'auto',
                   maxHeight: 'var(--game-title-height)',
-                  objectFit: 'contain',
-                  padding: 'var(--space-sm) 0'
+                  objectFit: 'contain'
                 }} 
               />
             </div>
