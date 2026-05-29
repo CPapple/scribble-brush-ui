@@ -321,7 +321,12 @@ function BrushSizeButton({ size, isActive, onClick }) {
 
 // ─── Toolbar ─────────────────────────────────────────────────────────────────
 function Toolbar({ tool, brushColor, brushSize, onToolChange, onColorChange, onSizeChange }) {
+  // 原始顏色選擇器中的所有顏色
   const colors = ['#000000', '#FF6F61', '#20B2AA', '#90EE90', '#FFD700', '#FF4500', '#8B5CF6', '#3E403F', '#FF69B4', '#00FFFF', '#FFA500', '#8A2BE2', '#7FFF00', '#DC143C'];
+  
+  // 只在橡皮擦右側顯示的六個顏色 + 黑色
+  const limitedColors = ['#000000', '#FF69B4', '#00FFFF', '#FFA500', '#8A2BE2', '#7FFF00', '#DC143C'];
+  
   const sizes = [4, 8, 12, 20];
 
   return (
@@ -331,8 +336,9 @@ function Toolbar({ tool, brushColor, brushSize, onToolChange, onColorChange, onS
         <ToolButton icon="🧹" isActive={tool === 'eraser'} onClick={() => onToolChange('eraser')} label="橡皮擦" />
       </div>
       <div className="toolbar-divider" />
+      {/* 限制顏色選擇器只顯示六個顏色 + 黑色 */}
       <div className="toolbar-group">
-        {colors.map((c) => (
+        {limitedColors.map((c) => (
           <ColorSwatch key={c} color={c} isActive={brushColor === c} onClick={() => onColorChange(c)} label={`顏色 ${c}`} />
         ))}
       </div>
