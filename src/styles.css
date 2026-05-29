@@ -85,7 +85,7 @@
   --sidebar-right-width: 260px;
   --toolbar-height:      60px;
   --header-height:       48px;
-  --game-title-height:   120px;  /* 放大：遊戲標題高度 */
+  --game-title-height:   150px;  /* 放大：遊戲標題高度 */
   --app-layout-height:   calc(100vh - 280px);  /* 新增：應用佈局高度 */
 }
 
@@ -394,8 +394,10 @@ body {
   padding: 0;
   height: var(--game-title-height);
   display: flex;
-  align-items: flex-end;  /* 改為底部對齊 */
+  align-items: flex-end;  /* 底部對齊 */
   justify-content: center;
+  position: relative;
+  z-index: 2;  /* 確保 logo 在倒數計時區上方 */
 }
 
 .game-title-block img {
@@ -403,6 +405,8 @@ body {
   width: auto;
   object-fit: contain;
   max-height: 100%;
+  /* 允許 logo 透明部分被倒數計時區壓到 */
+  position: relative;
 }
 
 /* Top bar (timer + word hint) */
