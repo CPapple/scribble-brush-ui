@@ -802,17 +802,10 @@ function App() {
               />
               {/* Canvas effects overlay */}
               <div className="canvas-effect-overlay" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', transition: 'opacity var(--transition-normal)' }}></div>
-              {/* Canvas Toolbar */}
-              <CanvasToolbar 
-                tool={tool}
-                brushSize={brushSize}
-                onToolChange={setTool}
-                onSizeChange={setBrushSize}
-              />
               {/* Unified Tool Panel inside canvas */}
               <div style={{
                 position: 'absolute',
-                bottom: '60px',
+                bottom: '20px',
                 left: '50%',
                 transform: 'translateX(-50%)',
                 display: 'flex',
@@ -920,14 +913,6 @@ function App() {
                   ))}
                 </div>
               </div>
-              <Toolbar
-                tool={tool}
-                brushColor={brushColor}
-                brushSize={brushSize}
-                onToolChange={setTool}
-                onColorChange={setBrushColor}
-                onSizeChange={setBrushSize}
-              />
             </div>
           </main>
 
