@@ -649,16 +649,12 @@ function App() {
           <main className="game-area">
             {/* Game Title - Above everything */}
             <div className="game-title-block">
-              <img 
-                src="/logol1.png" 
-                alt="遊戲 Logo" 
-                style={{ 
-                  height: 'var(--font-size-xxl)', 
-                  width: 'auto',
-                  maxHeight: '50px',
-                  objectFit: 'contain'
-                }} 
-              />
+              <div className="custom-logo-container">
+                <img 
+                  src="/logol1.png" 
+                  alt="遊戲 Logo" 
+                />
+              </div>
             </div>
 
             {/* Top Bar (timer + word hint) */}
