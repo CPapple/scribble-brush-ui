@@ -394,11 +394,12 @@ body {
   padding: 0;
   height: var(--game-title-height);
   display: flex;
-  align-items: flex-start;  /* 頂部對齊，讓 logo 上半部露出 */
+  align-items: center;
   justify-content: center;
   position: relative;
   z-index: 2;
   margin-top: -50px;  /* 讓 logo 上半部露出 1/4 */
+  margin-bottom: -50px;  /* 讓 logo 下半部被倒數計時框框壓住 1/4 */
 }
 
 .game-title-block img {
