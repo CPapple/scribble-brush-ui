@@ -1,6 +1,6 @@
 /* ==========================================================================
    Pictionary - Design System V2
-   8px Grid System + CSS Variables + Dark Mode Support + Card Attack System
+   8px Grid System + CSS Variables + Card Attack System
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -56,51 +56,6 @@
   --color-warning: var(--color-orange-red);
   --color-info:    var(--color-teal);
 
-  /* === Border Radius === */
-  --radius-sm:  8px;
-  --radius-md:  12px;
-  --radius-lg:  16px;
-  --radius-full: 50%;
-
-  /* === Shadows === */
-  --shadow-sm:  0 1px 3px rgba(0,0,0,0.08);
-  --shadow-md:  0 4px 12px rgba(0,0,0,0.10);
-  --shadow-lg:  0 8px 24px rgba(0,0,0,0.12);
-  --shadow-xl:  0 12px 40px rgba(0,0,0,0.18);
-
-  /* === Transitions === */
-  --transition-fast:   150ms ease-out;
-  --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-bounce: 400ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
-
-  /* === Z-Index Scale === */
-  --z-base:    0;
-  --z-raised:  10;
-  --z-overlay: 100;
-  --z-modal:   1000;
-  --z-toast:   2000;
-
-  /* === Layout === */
-  --sidebar-left-width:  220px;
-  --sidebar-right-width: 260px;
-  --toolbar-height:      60px;
-  --header-height:       48px;
-}
-
-/* --------------------------------------------------------------------------
-   Dark Mode
-   -------------------------------------------------------------------------- */
-[data-theme="dark"] {
-  --color-spring-green: #76D176;
-  --color-bg-app:      #121212;
-  --color-bg-surface:  #1E1E1E;
-  --color-bg-canvas:   #F5F5F5;
-  --color-bg-input:    #1E1E1E;
-  --color-border:      #333333;
-  --color-divider:     #333333;
-  --color-text-primary:   #E0E0E0;
-  --color-text-secondary: #A0A0A0;
-}
 
 /* --------------------------------------------------------------------------
    Reset & Base

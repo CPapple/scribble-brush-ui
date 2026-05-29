@@ -37,16 +37,9 @@ frontend/
 |------|----------|------|
 | 間距 | `--space-*` | 8px 网格系统 |
 | 字體 | `--font-*` | 階層式字體設定 |
-| 顏色 | `--color-*` | 品牌色 + Light/Dark Mode |
+| 顏色 | `--color-*` | 品牌色 |
 | 動畫 | `--transition-*` | 微互動參數 |
 | 陰影 | `--shadow-*` | 卡片陰影層級 |
-
-### 主題切換
-
-```jsx
-// 使用 data-theme="dark" 屬性切換
-document.documentElement.setAttribute('data-theme', 'dark');
-```
 
 ### 動畫時長
 

@@ -101,19 +101,6 @@ const ATTACK_CARDS = [
 ];
 
 // ─── Theme Toggle ────────────────────────────────────────────────────────────
-function ThemeToggle({ theme, onToggle }) {
-  return (
-    <button
-      className="btn btn--ghost btn--icon"
-      onClick={onToggle}
-      aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
-    >
-      {theme === 'light' ? '🌙' : '☀️'}
-    </button>
-  );
-}
-
-// ─── Ping Indicator ─────────────────────────────────────────────────────────
 function PingIndicator({ ping }) {
   let level = 'good';
   if (ping >= 150) level = 'bad';
@@ -400,8 +387,7 @@ function AttackTargetModal({ card, players, myId, onSelectTarget, onCancel }) {
 
 // ─── Main App ───────────────────────────────────────────────────────────────
 function App() {
-  // ── Theme ──
-  const [theme, setTheme] = useState('light');
+  
 
   // ── Game State ──
   const [players, setPlayers] = useState([
@@ -602,10 +588,7 @@ function App() {
   // ── Word Hint Display ──
   const displayWordHint = newWord || wordHint;
 
-  // ── Theme Toggle ──
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
-  };
+
 
   return (
     <>
@@ -645,7 +628,6 @@ function App() {
               <GameHeader timeLeft={timeLeft} wordHint={displayWordHint} />
               <div className="game-status-icons">
                 <PingIndicator ping={42} />
-                <ThemeToggle theme={theme} onToggle={toggleTheme} />
               </div>
             </div>
 
