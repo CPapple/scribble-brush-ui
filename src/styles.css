@@ -582,7 +582,7 @@ body {
 }
 
 /* Noise effect */
-.canvas-effect--noise .canvas-effect-overlay {
+.canvas-effect--noise {
   background-image: url("/noise/little8.png");
   background-repeat: repeat;
   background-size: 100px 100px;
