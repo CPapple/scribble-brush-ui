@@ -714,6 +714,8 @@ body {
   position: sticky;
   bottom: 0;
   background-color: var(--color-bg-surface);
+  align-items: center;
+  margin-top: auto; /* 將輸入框推到底部 */
 }
 
 .chat-input-wrapper .input {

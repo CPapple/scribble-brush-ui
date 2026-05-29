@@ -236,17 +236,17 @@ function ChatPanel({ messages, onSendMessage }) {
   };
 
   return (
-    <aside className="sidebar-right card">
+    <aside className="sidebar-right card" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <div className="p-md" style={{ borderBottom: '1px solid var(--color-border)' }}>
         <h2>聊天 / 猜題</h2>
       </div>
-      <div className="chat-messages">
+      <div className="chat-messages" style={{ flex: 1, overflowY: 'auto' }}>
         {messages.map((msg, i) => (
           <ChatMessage key={i} {...msg} />
         ))}
         <div ref={messagesEndRef} />
       </div>
-      <form className="chat-input-wrapper" onSubmit={handleSubmit}>
+      <form className="chat-input-wrapper" onSubmit={handleSubmit} style={{ marginTop: 'auto' }}>
         <input
           type="text"
           className="input"
@@ -254,8 +254,9 @@ function ChatPanel({ messages, onSendMessage }) {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           aria-label="聊天輸入框"
+          style={{ flex: 1 }}
         />
-        <button type="submit" className="btn btn--primary">送出</button>
+        <button type="submit" className="btn btn--primary" style={{ whiteSpace: 'nowrap' }}>送出</button>
       </form>
     </aside>
   );
