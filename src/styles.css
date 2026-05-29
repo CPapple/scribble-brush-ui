@@ -986,7 +986,7 @@ body {
   padding: var(--space-md);
   opacity: 0;
   transform: scale(0) rotate(0deg);
-  animation: cardAppearAnimation 2s ease-in-out forwards;
+  animation: cardAppearAnimation 3s ease-in-out forwards;
 }
 
 .animated-card-placeholder .card-icon {
@@ -1004,36 +1004,36 @@ body {
     transform: scale(0) rotate(0deg);
     opacity: 0;
   }
-  15% {
+  10% {
     transform: scale(1.2) rotate(360deg);
     opacity: 1;
   }
-  25% {
+  17% {
     transform: scale(1) rotate(0deg);
     opacity: 1;
   }
-  30% {
+  20% {
+    transform: scale(1.1) rotate(0deg);
+  }
+  27% {
+    transform: scale(1) rotate(0deg);
+  }
+  33% {
     transform: scale(1.1) rotate(0deg);
   }
   40% {
     transform: scale(1) rotate(0deg);
   }
-  50% {
-    transform: scale(1.1) rotate(0deg);
-  }
-  60% {
-    transform: scale(1) rotate(0deg);
-  }
-  70% {
+  47% {
     transform: scale(1.05) rotate(0deg);
   }
-  80% {
+  53% {
     transform: scale(1) rotate(0deg);
   }
-  90% {
+  60% {
     transform: scale(1.02) rotate(0deg);
   }
-  95% {
+  67% {
     transform: scale(1) rotate(0deg);
   }
   100% {
