@@ -204,7 +204,8 @@ const DrawingCanvas = forwardRef(function DrawingCanvas({
       onTouchMove={handlePointerMove}
       onTouchEnd={handlePointerUp}
       style={{
-        display: 'block',n        width: '100%',
+        display: 'block',
+        width: '100%',
         height: '100%',
         cursor: tool === 'eraser' ? 'crosshair' : 'crosshair',
         touchAction: 'none',
