@@ -327,6 +327,8 @@ export default function BackgroundLayer({
   speed = 1,
   iconColor = 'rgba(255,255,255,0.12)',
   iconSize = 90,
+  isEffectIncoming = false,  // 新增參數：攻擊前警告效果
+  effectIntensity = 0,       // 新增參數：效果強度 (0-1)
 }) {
   const canvasRef = useRef(null);
   const iconsRef = useRef([]);
@@ -362,8 +364,19 @@ export default function BackgroundLayer({
     const wrapX = canvas.width + iconSize;
     const wrapY = canvas.height + iconSize;
 
-    // Coral background
-    ctx.fillStyle = '#FF6F61';
+    // Coral background with attack warning effect
+    if (isEffectIncoming || effectIntensity > 0) {
+      // 呼吸燈效果：顏色在珊瑚紅和更深的紅色之間變化
+      const pulse = Math.sin(timestamp / 200) * 0.5 + 0.5; // 0 to 1
+      const intensity = Math.max(effectIntensity, isEffectIncoming ? 1 : 0);
+      const r = Math.floor(255 - pulse * 30 * intensity);  // 255 to 225
+      const g = Math.floor(111 - pulse * 50 * intensity);  // 111 to 61
+      const b = Math.floor(97 - pulse * 30 * intensity);   // 97 to 67
+      ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+    } else {
+      // Normal coral background
+      ctx.fillStyle = '#FF6F61';
+    }
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Draw polka dot pattern
@@ -382,7 +395,7 @@ export default function BackgroundLayer({
     }
 
     requestAnimationFrame(animate);
-  }, [speed, iconColor, iconSize]);
+  }, [speed, iconColor, iconSize, isEffectIncoming, effectIntensity]);
 
   useEffect(() => {
     const raf = requestAnimationFrame(animate);

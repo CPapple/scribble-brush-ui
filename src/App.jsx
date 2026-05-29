@@ -423,6 +423,9 @@ function App() {
   const [flipV, setFlipV] = useState(false);
   const [canvasEffect, setCanvasEffect] = useState(null);
   const [newWord, setNewWord] = useState(null);
+  // For testing purposes
+  const [testEffectIncoming, setTestEffectIncoming] = useState(false);
+  const [testEffectIntensity, setTestEffectIntensity] = useState(0);
 
   // Get first card for single hand display
   const firstHandCard = handCards.length > 0 ? handCards[0] : null;
@@ -592,7 +595,13 @@ function App() {
   return (
     <>
       {/* Background Layer */}
-      <BackgroundLayer speed={1} iconColor="rgba(255,255,255,0.12)" iconSize={80} />
+      <BackgroundLayer 
+        speed={1} 
+        iconColor="rgba(255,255,255,0.12)" 
+        iconSize={80} 
+        isEffectIncoming={isEffectIncoming || testEffectIncoming}
+        effectIntensity={testEffectIntensity}
+      />
 
       {/* Attack Warning Overlay */}
       {isEffectIncoming && (
@@ -606,6 +615,25 @@ function App() {
           }}
         />
       )}
+
+      {/* Test Controls - Only shown in development */}
+      <div style={{ position: 'fixed', top: 10, right: 10, zIndex: 1000, backgroundColor: 'rgba(0,0,0,0.7)', padding: 10, borderRadius: 5, color: 'white' }}>
+        <h3>測試控制面板</h3>
+        <button onClick={() => setTestEffectIncoming(!testEffectIncoming)}>
+          {testEffectIncoming ? '關閉攻擊警告' : '啟動攻擊警告'}
+        </button>
+        <div>
+          <label>效果強度: {testEffectIntensity.toFixed(2)}</label>
+          <input 
+            type="range" 
+            min="0" 
+            max="1" 
+            step="0.01" 
+            value={testEffectIntensity} 
+            onChange={(e) => setTestEffectIntensity(parseFloat(e.target.value))} 
+          />
+        </div>
+      </div>
 
       {/* Main App */}
       <div className="app-wrapper">
