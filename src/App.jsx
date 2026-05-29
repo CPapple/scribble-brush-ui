@@ -648,7 +648,18 @@ function App() {
           {/* Center - Game Area */}
           <main className="game-area">
             {/* Game Title - Above everything */}
-            <div className="game-title-block">Pictionary</div>
+            <div className="game-title-block">
+              <img 
+                src="/logol1.png" 
+                alt="遊戲 Logo" 
+                style={{ 
+                  height: 'var(--font-size-xxl)', 
+                  width: 'auto',
+                  maxHeight: '50px',
+                  objectFit: 'contain'
+                }} 
+              />
+            </div>
 
             {/* Top Bar (timer + word hint) */}
             <div className="game-top-bar">
