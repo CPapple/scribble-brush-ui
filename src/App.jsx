@@ -122,7 +122,7 @@ const ATTACK_CARDS = [
   },
   {
     id: 'noise',
-    name: '噪點',
+    name: '吉躁',
     icon: '📡',
     type: 'visual',
     description: '畫面出現噪點干擾',
