@@ -235,6 +235,39 @@ function drawHaze(ctx, cx, cy, size, color) {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
+   Polka Dot Pattern (diagonal, fading towards center)
+   ───────────────────────────────────────────────────────────────────────────── */
+function drawPolkaDots(ctx, width, height) {
+  const spacing = 40;  // Distance between dots
+  const dotRadius = 2;  // Size of dots
+  
+  // Create pattern that fades towards center
+  for (let x = 0; x < width; x += spacing) {
+    for (let y = 0; y < height; y += spacing) {
+      // Calculate distance from center
+      const centerX = width / 2;
+      const centerY = height / 2;
+      const distanceFromCenter = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2));
+      const maxDistance = Math.sqrt(Math.pow(centerX, 2) + Math.pow(centerY, 2));
+      
+      // Calculate opacity (1 at corners, 0 at center)
+      const opacity = Math.max(0, 1 - (distanceFromCenter / maxDistance));
+      
+      // Only draw dots with some opacity
+      if (opacity > 0.05) {
+        ctx.save();
+        ctx.globalAlpha = opacity * 0.3;  // Max 30% opacity
+        ctx.fillStyle = 'white';
+        ctx.beginPath();
+        ctx.arc(x, y, dotRadius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
    Icon registry (in the order you uploaded them)
    ───────────────────────────────────────────────────────────────────────────── */
 const DRAW_FNS = [
@@ -332,6 +365,9 @@ export default function BackgroundLayer({
     // Coral background
     ctx.fillStyle = '#FF6F61';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Draw polka dot pattern
+    drawPolkaDots(ctx, canvas.width, canvas.height);
 
     // Draw icons
     for (const icon of iconsRef.current) {
