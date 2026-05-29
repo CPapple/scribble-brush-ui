@@ -321,7 +321,7 @@ function BrushSizeButton({ size, isActive, onClick }) {
 
 // ─── Toolbar ─────────────────────────────────────────────────────────────────
 function Toolbar({ tool, brushColor, brushSize, onToolChange, onColorChange, onSizeChange }) {
-  const colors = ['#000000', '#FF6F61', '#20B2AA', '#90EE90', '#FFD700', '#FF4500', '#8B5CF6', '#3E403F'];
+  const colors = ['#000000', '#FF6F61', '#20B2AA', '#90EE90', '#FFD700', '#FF4500', '#8B5CF6', '#3E403F', '#FF69B4', '#00FFFF', '#FFA500', '#8A2BE2', '#7FFF00', '#DC143C'];
   const sizes = [4, 8, 12, 20];
 
   return (
