@@ -429,6 +429,8 @@ function AttackTargetModal({ card, players, myId, onSelectTarget, onCancel }) {
 
 // ─── Main App ───────────────────────────────────────────────────────────────
 function App() {
+  // 定義顏色選擇器使用的顏色
+  const limitedColors = ['#000000', '#FF69B4', '#00FFFF', '#FFA500', '#8A2BE2', '#7FFF00', '#DC143C'];
   
 
   // ── Game State ──
@@ -807,6 +809,39 @@ function App() {
                 onToolChange={setTool}
                 onSizeChange={setBrushSize}
               />
+              {/* Color Picker inside canvas */}
+              <div style={{
+                position: 'absolute',
+                bottom: '60px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                display: 'flex',
+                gap: '8px',
+                padding: '6px 12px',
+                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                borderRadius: '20px',
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+                zIndex: 10,
+                backdropFilter: 'blur(4px)'
+              }}>
+                {limitedColors.map((c) => (
+                  <div
+                    key={c}
+                    onClick={() => setBrushColor(c)}
+                    style={{
+                      width: '24px',
+                      height: '24px',
+                      borderRadius: '50%',
+                      backgroundColor: c,
+                      cursor: 'pointer',
+                      border: brushColor === c ? '2px solid #333' : '2px solid transparent',
+                      transition: 'all 0.2s',
+                      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.2)'
+                    }}
+                    title={`顏色 ${c}`}
+                  />
+                ))}
+              </div>
               <Toolbar
                 tool={tool}
                 brushColor={brushColor}
