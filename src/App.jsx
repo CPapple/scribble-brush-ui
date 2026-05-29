@@ -685,6 +685,7 @@ function App() {
         <div style={{ marginTop: 10 }}>
           <h4>測試卡牌效果:</h4>
           <div>
+            {/* 模糊特效 */}
             <button 
               key={ATTACK_CARDS[0].id}
               onClick={() => {
@@ -703,6 +704,7 @@ function App() {
             >
               {ATTACK_CARDS[0].icon} {ATTACK_CARDS[0].name}
             </button>
+            {/* 卡頓特效 */}
             <button 
               key={ATTACK_CARDS[2].id}
               onClick={() => {
@@ -723,33 +725,56 @@ function App() {
             >
               {ATTACK_CARDS[2].icon} {ATTACK_CARDS[2].name}
             </button>
-            {/* 顯示所有其他特效（排除倒轉和抖動） */}
-            {ATTACK_CARDS.slice(10).filter(card => card.id !== 'reverse' && card.id !== 'shake').map((card) => (
-              <button 
-                key={card.id}
-                onClick={() => {
-                  // 模擬卡牌攻擊效果
-                  console.log('Testing card:', card.id, card.effectClass);  // 添加調試日誌
-                  console.log('Canvas effect class:', card.effectClass || '');
-                  setCanvasEffect(card.effectClass || '');
-                  if (card.flipHorizontal) setFlipH(true);
-                  if (card.flipVertical) setFlipV(true);
-                  setActiveEffect(card);
-                  
-                  // 8秒後清除效果
-                  setTimeout(() => {
-                    console.log('Clearing effect:', card.id);
-                    setCanvasEffect('');
-                    setFlipH(false);
-                    setFlipV(false);
-                    setActiveEffect(null);
-                  }, 8000);
-                }}
-                style={{ margin: 5, padding: '5px 10px', fontSize: '12px' }}
-              >
-                {card.icon} {card.name}
-              </button>
-            ))}
+            {/* 鏡像特效 */}
+            <button 
+              key={ATTACK_CARDS[10].id}
+              onClick={() => {
+                // 模擬鏡像卡攻擊效果
+                console.log('Testing card:', ATTACK_CARDS[10].id, ATTACK_CARDS[10].effectClass);
+                console.log('Canvas effect class:', ATTACK_CARDS[10].effectClass || '');
+                setCanvasEffect(ATTACK_CARDS[10].effectClass || '');
+                if (ATTACK_CARDS[10].flipHorizontal) setFlipH(true);
+                if (ATTACK_CARDS[10].flipVertical) setFlipV(true);
+                setActiveEffect(ATTACK_CARDS[10]);
+                
+                // 8秒後清除效果
+                setTimeout(() => {
+                  console.log('Clearing effect:', ATTACK_CARDS[10].id);
+                  setCanvasEffect('');
+                  setFlipH(false);
+                  setFlipV(false);
+                  setActiveEffect(null);
+                }, 8000);
+              }}
+              style={{ margin: 5, padding: '5px 10px', fontSize: '12px' }}
+            >
+              {ATTACK_CARDS[10].icon} {ATTACK_CARDS[10].name}
+            </button>
+            {/* 噪點特效 */}
+            <button 
+              key={ATTACK_CARDS[12].id}
+              onClick={() => {
+                // 模擬噪點卡攻擊效果
+                console.log('Testing card:', ATTACK_CARDS[12].id, ATTACK_CARDS[12].effectClass);
+                console.log('Canvas effect class:', ATTACK_CARDS[12].effectClass || '');
+                setCanvasEffect(ATTACK_CARDS[12].effectClass || '');
+                if (ATTACK_CARDS[12].flipHorizontal) setFlipH(true);
+                if (ATTACK_CARDS[12].flipVertical) setFlipV(true);
+                setActiveEffect(ATTACK_CARDS[12]);
+                
+                // 8秒後清除效果
+                setTimeout(() => {
+                  console.log('Clearing effect:', ATTACK_CARDS[12].id);
+                  setCanvasEffect('');
+                  setFlipH(false);
+                  setFlipV(false);
+                  setActiveEffect(null);
+                }, 8000);
+              }}
+              style={{ margin: 5, padding: '5px 10px', fontSize: '12px' }}
+            >
+              {ATTACK_CARDS[12].icon} {ATTACK_CARDS[12].name}
+            </button>
           </div>
         </div>
       </div>
