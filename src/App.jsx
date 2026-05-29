@@ -861,6 +861,29 @@ function App() {
                   </button>
                 </div>
                 <div style={{ width: '1px', backgroundColor: '#ddd', margin: '0 8px' }}></div>
+                {/* Clear Canvas Button */}
+                <div style={{ display: 'flex', gap: '6px' }}>
+                  <button
+                    onClick={() => canvasRef.current?.clear()}
+                    style={{
+                      width: '36px',
+                      height: '36px',
+                      borderRadius: '50%',
+                      border: '1px solid #999',
+                      backgroundColor: 'white',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '18px',
+                      boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)'
+                    }}
+                    title="清空畫布"
+                  >
+                    🗑️
+                  </button>
+                </div>
+                <div style={{ width: '1px', backgroundColor: '#ddd', margin: '0 8px' }}></div>
                 {/* Color Picker */}
                 <div style={{ display: 'flex', gap: '6px' }}>
                   {limitedColors.map((c) => (
