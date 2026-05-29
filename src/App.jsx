@@ -98,6 +98,54 @@ const ATTACK_CARDS = [
     effectClass: '',
     changesWord: true,
   },
+  // 新增卡牌效果
+  {
+    id: 'flicker',
+    name: '閃爍',
+    icon: '⚡',
+    type: 'visual',
+    description: '畫面閃爍不定',
+    duration: 8000,
+    effectClass: 'canvas-effect--flicker',
+  },
+  {
+    id: 'mirror',
+    name: '鏡像',
+    icon: '🔍',
+    type: 'control',
+    description: '畫面鏡像翻轉',
+    duration: 8000,
+    effectClass: '',
+    flipHorizontal: true,
+    flipVertical: true,
+  },
+  {
+    id: 'shake',
+    name: '抖動',
+    icon: '🌪️',
+    type: 'control',
+    description: '畫面持續抖動',
+    duration: 8000,
+    effectClass: 'canvas-effect--shake',
+  },
+  {
+    id: 'noise',
+    name: '噪點',
+    icon: '📡',
+    type: 'visual',
+    description: '畫面出現噪點干擾',
+    duration: 8000,
+    effectClass: 'canvas-effect--noise',
+  },
+  {
+    id: 'reverse',
+    name: '倒轉',
+    icon: '🔁',
+    type: 'special',
+    description: '操作反向執行',
+    duration: 8000,
+    effectClass: 'canvas-effect--reverse',
+  },
 ];
 
 // ─── Theme Toggle ────────────────────────────────────────────────────────────
@@ -617,7 +665,7 @@ function App() {
       )}
 
       {/* Test Controls - Only shown in development */}
-      <div style={{ position: 'fixed', top: 10, right: 10, zIndex: 1000, backgroundColor: 'rgba(0,0,0,0.7)', padding: 10, borderRadius: 5, color: 'white' }}>
+      <div style={{ position: 'fixed', top: 10, right: 10, zIndex: 1000, backgroundColor: 'rgba(0,0,0,0.7)', padding: 10, borderRadius: 5, color: 'white', maxWidth: 300 }}>
         <h3>測試控制面板</h3>
         <button onClick={() => setTestEffectIncoming(!testEffectIncoming)}>
           {testEffectIncoming ? '關閉攻擊警告' : '啟動攻擊警告'}
@@ -632,6 +680,32 @@ function App() {
             value={testEffectIntensity} 
             onChange={(e) => setTestEffectIntensity(parseFloat(e.target.value))} 
           />
+        </div>
+        <div style={{ marginTop: 10 }}>
+          <h4>測試卡牌效果:</h4>
+          {ATTACK_CARDS.slice(10).map((card) => (
+            <button 
+              key={card.id}
+              onClick={() => {
+                // 模擬卡牌攻擊效果
+                setCanvasEffect(card.effectClass);
+                if (card.flipHorizontal) setFlipH(true);
+                if (card.flipVertical) setFlipV(true);
+                setActiveEffect(card);
+                
+                // 8秒後清除效果
+                setTimeout(() => {
+                  setCanvasEffect(null);
+                  setFlipH(false);
+                  setFlipV(false);
+                  setActiveEffect(null);
+                }, 8000);
+              }}
+              style={{ margin: 5, padding: '5px 10px', fontSize: '12px' }}
+            >
+              {card.icon} {card.name}
+            </button>
+          ))}
         </div>
       </div>
 
