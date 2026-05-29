@@ -475,6 +475,9 @@ function App() {
   // For testing purposes
   const [testEffectIncoming, setTestEffectIncoming] = useState(false);
   const [testEffectIntensity, setTestEffectIntensity] = useState(0);
+  // Card animation state
+  const [showCardAnimation, setShowCardAnimation] = useState(false);
+  const [animatedCard, setAnimatedCard] = useState(null);
 
   // Get first card for single hand display
   const firstHandCard = handCards.length > 0 ? handCards[0] : null;
@@ -691,6 +694,9 @@ function App() {
               onClick={() => {
                 // 模擬模糊卡攻擊效果
                 console.log('Testing card:', ATTACK_CARDS[0].id, ATTACK_CARDS[0].effectClass);
+                // 觸發卡牌動畫
+                setAnimatedCard(ATTACK_CARDS[0]);
+                setShowCardAnimation(true);
                 setCanvasEffect(ATTACK_CARDS[0].effectClass || '');
                 setActiveEffect(ATTACK_CARDS[0]);
                 
@@ -698,6 +704,7 @@ function App() {
                 setTimeout(() => {
                   setCanvasEffect('');
                   setActiveEffect(null);
+                  setShowCardAnimation(false);
                 }, 8000);
               }}
               style={{ margin: 5, padding: '5px 10px', fontSize: '12px' }}
@@ -711,6 +718,9 @@ function App() {
                 // 模擬卡頓卡攻擊效果
                 console.log('Testing card:', ATTACK_CARDS[2].id, ATTACK_CARDS[2].effectClass);
                 console.log('Setting canvas effect to:', ATTACK_CARDS[2].effectClass || '');
+                // 觸發卡牌動畫
+                setAnimatedCard(ATTACK_CARDS[2]);
+                setShowCardAnimation(true);
                 setCanvasEffect(ATTACK_CARDS[2].effectClass || '');
                 setActiveEffect(ATTACK_CARDS[2]);
                 
@@ -719,6 +729,7 @@ function App() {
                   console.log('Clearing canvas effect');
                   setCanvasEffect('');
                   setActiveEffect(null);
+                  setShowCardAnimation(false);
                 }, 8000);
               }}
               style={{ margin: 5, padding: '5px 10px', fontSize: '12px' }}
@@ -732,6 +743,9 @@ function App() {
                 // 模擬鏡像卡攻擊效果
                 console.log('Testing card:', ATTACK_CARDS[10].id, ATTACK_CARDS[10].effectClass);
                 console.log('Canvas effect class:', ATTACK_CARDS[10].effectClass || '');
+                // 觸發卡牌動畫
+                setAnimatedCard(ATTACK_CARDS[10]);
+                setShowCardAnimation(true);
                 setCanvasEffect(ATTACK_CARDS[10].effectClass || '');
                 if (ATTACK_CARDS[10].flipHorizontal) setFlipH(true);
                 if (ATTACK_CARDS[10].flipVertical) setFlipV(true);
@@ -744,6 +758,7 @@ function App() {
                   setFlipH(false);
                   setFlipV(false);
                   setActiveEffect(null);
+                  setShowCardAnimation(false);
                 }, 8000);
               }}
               style={{ margin: 5, padding: '5px 10px', fontSize: '12px' }}
@@ -757,6 +772,9 @@ function App() {
                 // 模擬噪點卡攻擊效果
                 console.log('Testing card:', ATTACK_CARDS[12].id, ATTACK_CARDS[12].effectClass);
                 console.log('Canvas effect class:', ATTACK_CARDS[12].effectClass || '');
+                // 觸發卡牌動畫
+                setAnimatedCard(ATTACK_CARDS[12]);
+                setShowCardAnimation(true);
                 setCanvasEffect(ATTACK_CARDS[12].effectClass || '');
                 if (ATTACK_CARDS[12].flipHorizontal) setFlipH(true);
                 if (ATTACK_CARDS[12].flipVertical) setFlipV(true);
@@ -769,6 +787,7 @@ function App() {
                   setFlipH(false);
                   setFlipV(false);
                   setActiveEffect(null);
+                  setShowCardAnimation(false);
                 }, 8000);
               }}
               style={{ margin: 5, padding: '5px 10px', fontSize: '12px' }}
@@ -778,6 +797,16 @@ function App() {
           </div>
         </div>
       </div>
+
+      {/* Card Animation */}
+      {showCardAnimation && animatedCard && (
+        <div className="card-animation-overlay">
+          <div className="animated-card-placeholder">
+            <div className="card-icon">{animatedCard.icon}</div>
+            <div className="card-name">{animatedCard.name}</div>
+          </div>
+        </div>
+      )}
 
       {/* Main App */}
       <div className="app-wrapper">
