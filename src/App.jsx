@@ -12,7 +12,7 @@ const ATTACK_CARDS = [
     icon: '🌫️',
     type: 'visual',
     description: '使目標視線模糊',
-    duration: 8000,
+    duration: 12000,
     effectClass: 'canvas-effect--blur',
   },
   {
@@ -21,7 +21,7 @@ const ATTACK_CARDS = [
     icon: '👻',
     type: 'visual',
     description: '畫面透明度提高',
-    duration: 8000,
+    duration: 12000,
     effectClass: 'canvas-effect--opacity',
   },
   {
@@ -30,7 +30,7 @@ const ATTACK_CARDS = [
     icon: '🐢',
     type: 'delay',
     description: '畫面幀率下降',
-    duration: 8000,
+    duration: 12000,
     effectClass: 'canvas-effect--lag',
   },
   {
@@ -39,7 +39,7 @@ const ATTACK_CARDS = [
     icon: '💧',
     type: 'tool',
     description: '畫筆突然沒水',
-    duration: 8000,
+    duration: 12000,
     effectClass: 'canvas-effect--water-break',
   },
   {
@@ -48,7 +48,7 @@ const ATTACK_CARDS = [
     icon: '🖌️',
     type: 'tool',
     description: '筆刷大小突變',
-    duration: 8000,
+    duration: 12000,
     effectClass: 'canvas-effect--brush-mutation',
   },
   {
@@ -57,7 +57,7 @@ const ATTACK_CARDS = [
     icon: '↔️',
     type: 'control',
     description: '畫面左右反轉',
-    duration: 8000,
+    duration: 12000,
     effectClass: '',
     flipHorizontal: true,
   },
@@ -67,7 +67,7 @@ const ATTACK_CARDS = [
     icon: '↕️',
     type: 'control',
     description: '畫面上下反轉',
-    duration: 8000,
+    duration: 12000,
     effectClass: '',
     flipVertical: true,
   },
@@ -77,7 +77,7 @@ const ATTACK_CARDS = [
     icon: '🖼️',
     type: 'visual',
     description: '隨機圖片遮罩',
-    duration: 8000,
+    duration: 12000,
     effectClass: 'canvas-effect--mask',
   },
   {
@@ -86,7 +86,7 @@ const ATTACK_CARDS = [
     icon: '🎨',
     type: 'tool',
     description: '筆刷色彩突變',
-    duration: 8000,
+    duration: 12000,
     effectClass: 'canvas-effect--color-invert',
   },
   {
@@ -106,7 +106,7 @@ const ATTACK_CARDS = [
     icon: '🔍',
     type: 'control',
     description: '畫面鏡像翻轉',
-    duration: 8000,
+    duration: 12000,
     effectClass: '',
     flipHorizontal: true,
     flipVertical: true,
@@ -117,7 +117,7 @@ const ATTACK_CARDS = [
     icon: '🌪️',
     type: 'control',
     description: '畫面持續抖動',
-    duration: 8000,
+    duration: 12000,
     effectClass: 'canvas-effect--shake',
   },
   {
@@ -126,7 +126,7 @@ const ATTACK_CARDS = [
     icon: '📡',
     type: 'visual',
     description: '畫面出現噪點干擾',
-    duration: 8000,
+    duration: 12000,
     effectClass: 'canvas-effect--noise',
   },
   {
@@ -135,7 +135,7 @@ const ATTACK_CARDS = [
     icon: '🔁',
     type: 'special',
     description: '操作反向執行',
-    duration: 8000,
+    duration: 12000,
     effectClass: 'canvas-effect--reverse',
   },
 ];
@@ -716,12 +716,12 @@ function App() {
                 setCanvasEffect(ATTACK_CARDS[0].effectClass || '');
                 setActiveEffect(ATTACK_CARDS[0]);
                 
-                // 8秒後清除效果
+                // 12秒後清除效果
                 setTimeout(() => {
                   setCanvasEffect('');
                   setActiveEffect(null);
                   setShowCardAnimation(false);
-                }, 8000);
+                }, 12000);
               }}
               style={{ margin: 5, padding: '5px 10px', fontSize: '12px' }}
             >
@@ -742,13 +742,13 @@ function App() {
                 setCanvasEffect(ATTACK_CARDS[2].effectClass || '');
                 setActiveEffect(ATTACK_CARDS[2]);
                 
-                // 8秒後清除效果
+                // 12秒後清除效果
                 setTimeout(() => {
                   console.log('Clearing canvas effect');
                   setCanvasEffect('');
                   setActiveEffect(null);
                   setShowCardAnimation(false);
-                }, 8000);
+                }, 12000);
               }}
               style={{ margin: 5, padding: '5px 10px', fontSize: '12px' }}
             >
@@ -771,7 +771,7 @@ function App() {
                 if (ATTACK_CARDS[10].flipVertical) setFlipV(true);
                 setActiveEffect(ATTACK_CARDS[10]);
                 
-                // 8秒後清除效果
+                // 12秒後清除效果
                 setTimeout(() => {
                   console.log('Clearing effect:', ATTACK_CARDS[10].id);
                   setCanvasEffect('');
@@ -779,7 +779,7 @@ function App() {
                   setFlipV(false);
                   setActiveEffect(null);
                   setShowCardAnimation(false);
-                }, 8000);
+                }, 12000);
               }}
               style={{ margin: 5, padding: '5px 10px', fontSize: '12px' }}
             >
@@ -802,7 +802,7 @@ function App() {
                 if (ATTACK_CARDS[12].flipVertical) setFlipV(true);
                 setActiveEffect(ATTACK_CARDS[12]);
                 
-                // 8秒後清除效果
+                // 12秒後清除效果
                 setTimeout(() => {
                   console.log('Clearing effect:', ATTACK_CARDS[12].id);
                   setCanvasEffect('');
@@ -810,7 +810,7 @@ function App() {
                   setFlipV(false);
                   setActiveEffect(null);
                   setShowCardAnimation(false);
-                }, 8000);
+                }, 12000);
               }}
               style={{ margin: 5, padding: '5px 10px', fontSize: '12px' }}
             >
