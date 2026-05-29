@@ -86,7 +86,7 @@
   --toolbar-height:      60px;
   --header-height:       48px;
   --game-title-height:   200px;  /* 維持目前的 logo 大小 */
-  --app-layout-height:   calc(100vh - 280px);  /* 回到前兩版的設定 */
+  --app-layout-height:   calc(100vh - 200px);  /* 拉長畫布高度 */
 }
 
 /* --------------------------------------------------------------------------
@@ -188,7 +188,7 @@ body {
   width: 100%;
   max-width: 1400px;
   height: var(--app-layout-height);
-  max-height: 820px;  /* 回到前兩版的設定 */
+  max-height: 900px;  /* 拉長畫布高度 */
 }
 
 /* ==========================================================================
@@ -398,6 +398,7 @@ body {
   justify-content: center;
   position: relative;
   z-index: 2;  /* 確保 logo 在倒數計時區上方 */
+  margin-bottom: -50px;  /* 讓 logo 可以被倒數計時壓到 1/4 */
 }
 
 .game-title-block img {
