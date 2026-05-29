@@ -730,6 +730,7 @@ function App() {
                 onClick={() => {
                   // 模擬卡牌攻擊效果
                   console.log('Testing card:', card.id, card.effectClass);  // 添加調試日誌
+                  console.log('Canvas effect class:', card.effectClass || '');
                   setCanvasEffect(card.effectClass || '');
                   if (card.flipHorizontal) setFlipH(true);
                   if (card.flipVertical) setFlipV(true);
@@ -737,6 +738,7 @@ function App() {
                   
                   // 8秒後清除效果
                   setTimeout(() => {
+                    console.log('Clearing effect:', card.id);
                     setCanvasEffect('');
                     setFlipH(false);
                     setFlipV(false);
