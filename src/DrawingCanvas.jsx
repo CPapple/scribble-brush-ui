@@ -155,9 +155,25 @@ const DrawingCanvas = forwardRef(function DrawingCanvas({
   }, [onDrawEnd]);
 
   const handlePointerLeave = useCallback((e) => {
-    if (!isDrawingRef.current) return;
-    handlePointerUp(e);
-  }, [handlePointerUp]);
+    // 不再在滑鼠離開時結束繪畫過程
+    // 繪畫過程只由滑鼠按鍵控制
+  }, []);
+
+  // 在 document 上監聽滑鼠釋放事件，確保即使滑鼠在畫布外釋放也能結束繪畫
+  useEffect(() => {
+    const handleGlobalPointerUp = (e) => {
+      if (isDrawingRef.current) {
+        isDrawingRef.current = false;
+        lastPosRef.current = null;
+        onDrawEnd?.();
+      }
+    };
+
+    document.addEventListener('pointerup', handleGlobalPointerUp);
+    return () => {
+      document.removeEventListener('pointerup', handleGlobalPointerUp);
+    };
+  }, [onDrawEnd]);
 
   // ── Canvas Resize ─────────────────────────────────────────────────────────
   useEffect(() => {
