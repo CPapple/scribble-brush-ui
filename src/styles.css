@@ -85,8 +85,8 @@
   --sidebar-right-width: 260px;
   --toolbar-height:      60px;
   --header-height:       48px;
-  --game-title-height:   200px;  /* 調整為200px：遊戲標題高度 */
-  --app-layout-height:   1000px;  /* 調整為1000px：應用佈局高度 */
+  --game-title-height:   200px;  /* 維持目前的 logo 大小 */
+  --app-layout-height:   calc(100vh - 280px);  /* 回到前兩版的設定 */
 }
 
 /* --------------------------------------------------------------------------
@@ -179,7 +179,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 140px;
+  padding: 140px;  /* 回到前兩版的設定 */
 }
 
 .app-layout {
@@ -188,7 +188,7 @@ body {
   width: 100%;
   max-width: 1400px;
   height: var(--app-layout-height);
-  max-height: 920px;  /* 從 1000px 減少到 920px */
+  max-height: 820px;  /* 回到前兩版的設定 */
 }
 
 /* ==========================================================================
