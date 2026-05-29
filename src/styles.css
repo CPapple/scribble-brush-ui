@@ -85,7 +85,7 @@
   --sidebar-right-width: 260px;
   --toolbar-height:      60px;
   --header-height:       48px;
-  --game-title-height:   80px;  /* 增加：遊戲標題高度 */
+  --game-title-height:   120px;  /* 放大：遊戲標題高度 */
   --app-layout-height:   calc(100vh - 280px);  /* 新增：應用佈局高度 */
 }
 
@@ -394,7 +394,7 @@ body {
   padding: 0;
   height: var(--game-title-height);
   display: flex;
-  align-items: center;
+  align-items: flex-end;  /* 改為底部對齊 */
   justify-content: center;
 }
 
