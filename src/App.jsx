@@ -684,8 +684,7 @@ function App() {
         </div>
         <div style={{ marginTop: 10 }}>
           <h4>測試卡牌效果:</h4>
-          <div style={{ marginBottom: 10 }}>
-            <h5>常用效果:</h5>
+          <div>
             <button 
               key={ATTACK_CARDS[0].id}
               onClick={() => {
@@ -724,10 +723,8 @@ function App() {
             >
               {ATTACK_CARDS[2].icon} {ATTACK_CARDS[2].name}
             </button>
-          </div>
-          <div>
-            <h5>其他效果:</h5>
-            {ATTACK_CARDS.slice(10).map((card) => (
+            {/* 顯示所有其他特效（排除倒轉和抖動） */}
+            {ATTACK_CARDS.slice(10).filter(card => card.id !== 'reverse' && card.id !== 'shake').map((card) => (
               <button 
                 key={card.id}
                 onClick={() => {
