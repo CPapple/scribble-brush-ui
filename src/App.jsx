@@ -254,9 +254,9 @@ function ChatPanel({ messages, onSendMessage }) {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           aria-label="聊天輸入框"
-          style={{ flex: 1 }}
+          style={{ flex: 1, height: '36px', boxSizing: 'border-box' }}
         />
-        <button type="submit" className="btn btn--primary" style={{ whiteSpace: 'nowrap' }}>送出</button>
+        <button type="submit" className="btn btn--primary" style={{ whiteSpace: 'nowrap', height: '36px' }}>送出</button>
       </form>
     </aside>
   );
