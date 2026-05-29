@@ -204,11 +204,11 @@ const DrawingCanvas = forwardRef(function DrawingCanvas({
       onTouchMove={handlePointerMove}
       onTouchEnd={handlePointerUp}
       style={{
-        display: 'block',
-        width: '100%',
+        display: 'block',n        width: '100%',
         height: '100%',
         cursor: tool === 'eraser' ? 'crosshair' : 'crosshair',
         touchAction: 'none',
+        transform: `${flipH ? 'scaleX(-1)' : ''} ${flipV ? 'scaleY(-1)' : ''}`.trim() || 'none',
       }}
       aria-label="繪圖畫布"
       title="在畫布上繪圖"

@@ -568,17 +568,6 @@ body {
   opacity: 0.2;
 }
 
-/* Flicker effect */
-.canvas-effect--flicker .canvas-effect-overlay {
-  animation: flicker 0.1s infinite;
-  background: rgba(255, 255, 255, 0.1);
-}
-
-@keyframes flicker {
-  0%, 100% { opacity: 0.1; }
-  50% { opacity: 0.3; }
-}
-
 /* Shake effect */
 .canvas-effect--shake .canvas-effect-overlay {
   animation: shake 0.05s infinite;

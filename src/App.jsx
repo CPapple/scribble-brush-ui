@@ -100,15 +100,6 @@ const ATTACK_CARDS = [
   },
   // 新增卡牌效果
   {
-    id: 'flicker',
-    name: '閃爍',
-    icon: '⚡',
-    type: 'visual',
-    description: '畫面閃爍不定',
-    duration: 8000,
-    effectClass: 'canvas-effect--flicker',
-  },
-  {
     id: 'mirror',
     name: '鏡像',
     icon: '🔍',
