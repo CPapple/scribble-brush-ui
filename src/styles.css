@@ -85,8 +85,8 @@
   --sidebar-right-width: 260px;
   --toolbar-height:      60px;
   --header-height:       48px;
-  --game-title-height:   150px;  /* 放大：遊戲標題高度 */
-  --app-layout-height:   calc(100vh - 280px);  /* 新增：應用佈局高度 */
+  --game-title-height:   180px;  /* 再放大：遊戲標題高度 */
+  --app-layout-height:   calc(100vh - 200px);  /* 拉長：應用佈局高度 */
 }
 
 /* --------------------------------------------------------------------------
@@ -187,8 +187,8 @@ body {
   gap: var(--space-md);
   width: 100%;
   max-width: 1400px;
-  height: calc(100vh - 280px);
-  max-height: 820px;
+  height: var(--app-layout-height);
+  max-height: 900px;  /* 拉長最大高度 */
 }
 
 /* ==========================================================================
