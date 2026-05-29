@@ -317,34 +317,30 @@ function Toolbar({ tool, brushColor, brushSize, onToolChange, onColorChange, onS
 function AttackCard({ card, isSelected, isDisabled, onClick }) {
   return (
     <button
-      className={`attack-card attack-card--${card.type} ${isSelected ? 'attack-card--selected' : ''} ${isDisabled ? 'attack-card--disabled' : ''}`}
+      className={`single-attack-card single-attack-card--${card.type} ${isSelected ? 'attack-card--selected' : ''} ${isDisabled ? 'attack-card--disabled' : ''}`}
       onClick={onClick}
       disabled={isDisabled}
       title={card.description}
     >
-      <span className="attack-card__icon">{card.icon}</span>
-      <span className="attack-card__name">{card.name}</span>
+      <span className="single-attack-card__icon">{card.icon}</span>
+      <span className="single-attack-card__name">{card.name}</span>
     </button>
   );
 }
 
 // ─── Hand Cards ─────────────────────────────────────────────────────────────
-function HandCards({ cards, selectedCard, onSelectCard, disabled }) {
-  if (cards.length === 0) return null;
+function HandCards({ card, onSelectCard, disabled }) {
+  if (!card) return null;
 
   return (
-    <div className="hand-cards-container">
-      <div className="hand-cards-label">🎴 手牌</div>
-      <div className="hand-cards">
-        {cards.map((card) => (
-          <AttackCard
-            key={card.id}
-            card={card}
-            isSelected={selectedCard?.id === card.id}
-            isDisabled={disabled}
-            onClick={() => onSelectCard(card)}
-          />
-        ))}
+    <div className="single-hand-card-container">
+      <div className="single-hand-card">
+        <AttackCard
+          card={card}
+          isSelected={false}
+          isDisabled={disabled}
+          onClick={() => onSelectCard(card)}
+        />
       </div>
     </div>
   );
@@ -427,6 +423,9 @@ function App() {
   const [flipV, setFlipV] = useState(false);
   const [canvasEffect, setCanvasEffect] = useState(null);
   const [newWord, setNewWord] = useState(null);
+
+  // Get first card for single hand display
+  const firstHandCard = handCards.length > 0 ? handCards[0] : null;
 
   // ── Canvas Drawing Logic ──
   const getCanvasPos = useCallback((e) => {
@@ -661,13 +660,14 @@ function App() {
         </div>
       </div>
 
-      {/* Hand Cards */}
-      <HandCards
-        cards={handCards}
-        selectedCard={selectedCard}
-        onSelectCard={handleSelectCard}
-        disabled={showTargetModal}
-      />
+        {/* Hand Cards - Single card in bottom left of canvas */}
+        {firstHandCard && (
+          <HandCards
+            card={firstHandCard}
+            onSelectCard={handleSelectCard}
+            disabled={showTargetModal}
+          />
+        )}
 
       {/* Attack Target Modal */}
       {showTargetModal && selectedCard && (

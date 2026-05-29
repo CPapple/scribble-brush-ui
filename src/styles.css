@@ -56,6 +56,36 @@
   --color-warning: var(--color-orange-red);
   --color-info:    var(--color-teal);
 
+  /* === Border Radius === */
+  --radius-sm:  8px;
+  --radius-md:  12px;
+  --radius-lg:  16px;
+  --radius-full: 50%;
+
+  /* === Shadows === */
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md:  0 4px 12px rgba(0,0,0,0.10);
+  --shadow-lg:  0 8px 24px rgba(0,0,0,0.12);
+  --shadow-xl:  0 12px 40px rgba(0,0,0,0.18);
+
+  /* === Transitions === */
+  --transition-fast:   150ms ease-out;
+  --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: 400ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  /* === Z-Index Scale === */
+  --z-base:    0;
+  --z-raised:  10;
+  --z-overlay: 100;
+  --z-modal:   1000;
+  --z-toast:   2000;
+
+  /* === Layout === */
+  --sidebar-left-width:  220px;
+  --sidebar-right-width: 260px;
+  --toolbar-height:      60px;
+  --header-height:       48px;
+}
 
 /* --------------------------------------------------------------------------
    Reset & Base
@@ -157,8 +187,6 @@ body {
   max-width: 1400px;
   height: calc(100vh - 280px);
   max-height: 820px;
-  
-  
 }
 
 /* ==========================================================================
@@ -272,42 +300,29 @@ body {
 }
 
 /* ==========================================================================
-   HAND CARDS (Bottom - Attack Card System)
+   HAND CARDS (Bottom Left - Single Attack Card System)
    ========================================================================== */
-.hand-cards-container {
+.single-hand-card-container {
   position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
+  bottom: 20px;
+  left: 20px;
   z-index: var(--z-raised);
+}
+
+.single-hand-card {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--space-sm);
-  padding-bottom: var(--space-lg);
-}
-
-.hand-cards-label {
-  font-size: var(--font-size-caption);
-  font-weight: var(--font-weight-semibold);
-  color: rgba(255,255,255,0.8);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-}
-
-.hand-cards {
-  display: flex;
-  gap: var(--space-md);
-  justify-content: center;
 }
 
 /* --------------------------------------------------------------------------
-   Attack Card
+   Single Attack Card
    -------------------------------------------------------------------------- */
-.attack-card {
+.single-attack-card {
   width: 80px;
   height: 110px;
-  background: linear-gradient(145deg, #FFFFFF 0%, #F0F0F0 100%);
+  background: linear-gradient(145deg, #FF6F61 0%, #E85A4F 100%);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-md);
   cursor: pointer;
@@ -321,64 +336,36 @@ body {
   border: 2px solid transparent;
   position: relative;
   overflow: hidden;
+  color: white;
 }
 
-.attack-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: var(--color-coral);
-}
-
-.attack-card:hover {
+.single-attack-card:hover {
   transform: translateY(-8px) scale(1.05);
   box-shadow: var(--shadow-xl);
   border-color: #FFFFFF;
 }
 
-.attack-card:active {
+.single-attack-card:active {
   transform: translateY(-4px) scale(1.02);
 }
 
-.attack-card--selected {
-  border-color: var(--color-gold);
-  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.4), var(--shadow-lg);
-  transform: translateY(-12px);
-}
-
-.attack-card--disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  filter: grayscale(0.5);
-}
-
-.attack-card__icon {
+.single-attack-card__icon {
   font-size: 2rem;
 }
 
-.attack-card__name {
+.single-attack-card__name {
   font-size: var(--font-size-caption);
   font-weight: var(--font-weight-semibold);
   text-align: center;
-  color: var(--color-text-primary);
   line-height: 1.2;
 }
 
 /* Card type colors */
-.attack-card--visual    { --card-accent: #8B5CF6; }
-.attack-card--control  { --card-accent: #3B82F6; }
-.attack-card--tool     { --card-accent: #EF4444; }
-.attack-card--delay    { --card-accent: #F59E0B; }
-.attack-card--special  { --card-accent: #10B981; }
-
-.attack-card--visual::before    { background: #8B5CF6; }
-.attack-card--control::before  { background: #3B82F6; }
-.attack-card--tool::before     { background: #EF4444; }
-.attack-card--delay::before    { background: #F59E0B; }
-.attack-card--special::before { background: #10B981; }
+.single-attack-card--visual    { background: linear-gradient(145deg, #8B5CF6 0%, #7C3AED 100%); }
+.single-attack-card--control  { background: linear-gradient(145deg, #3B82F6 0%, #2563EB 100%); }
+.single-attack-card--tool     { background: linear-gradient(145deg, #EF4444 0%, #DC2626 100%); }
+.single-attack-card--delay    { background: linear-gradient(145deg, #F59E0B 0%, #D97706 100%); }
+.single-attack-card--special  { background: linear-gradient(145deg, #10B981 0%, #059669 100%); }
 
 /* ==========================================================================
    GAME AREA (Center)
@@ -442,7 +429,6 @@ body {
 }
 
 .word-hint {
-  font-size: var(--font-size-h2);
   font-weight: var(--font-weight-semibold);
   letter-spacing: 0.15em;
   color: var(--color-text-secondary);
@@ -557,332 +543,235 @@ body {
   mix-blend-mode: difference;
 }
 
-/* Image mask overlay */
+/* Mask overlay */
 .canvas-effect--mask .canvas-effect-overlay {
-  background: url('data:image/svg+xml,...') center/cover;
-  opacity: 0.6;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.2;
 }
 
 /* --------------------------------------------------------------------------
-   TOOLBAR (Bottom of Canvas)
+   TOOLBAR
    -------------------------------------------------------------------------- */
 .toolbar {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
+  justify-content: space-between;
   padding: var(--space-sm) var(--space-md);
   background-color: var(--color-bg-surface);
   border-top: 1px solid var(--color-border);
-  height: var(--toolbar-height);
-  overflow-x: auto;
   border-radius: 0 0 var(--radius-md) var(--radius-md);
+  min-height: var(--toolbar-height);
 }
 
 .toolbar-group {
   display: flex;
   align-items: center;
-  gap: var(--space-xs);
+  gap: var(--space-sm);
 }
 
 .toolbar-divider {
   width: 1px;
   height: 32px;
-  background-color: var(--color-border);
-  margin: 0 var(--space-xs);
+  background-color: var(--color-divider);
+  margin: 0 var(--space-sm);
+}
+
+.tool-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg-input);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.tool-btn:hover {
+  border-color: var(--color-coral);
+  background-color: var(--color-coral);
+  color: white;
+}
+
+.tool-btn--active {
+  border-color: var(--color-coral);
+  background-color: var(--color-coral);
+  color: white;
+}
+
+.color-swatch {
+  display: block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+}
+
+.brush-size-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brush-dot {
+  background-color: var(--color-text-primary);
+  border-radius: 50%;
+  display: block;
 }
 
 /* ==========================================================================
    CHAT PANEL (Right Sidebar)
    ========================================================================== */
-.sidebar-right {
-  width: var(--sidebar-right-width);
-  display: flex;
-  flex-direction: column;
-}
-
 .chat-messages {
   flex: 1;
-  overflow-y: auto;
   padding: var(--space-md);
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs);
+  gap: var(--space-sm);
 }
 
 .chat-message {
   padding: var(--space-xs) var(--space-sm);
   border-radius: var(--radius-sm);
   font-size: var(--font-size-body);
-  line-height: var(--line-height-tight);
-  word-break: break-word;
-  animation: msg-slide-in 0.2s ease-out;
-}
-
-@keyframes msg-slide-in {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
+  line-height: var(--line-height-normal);
 }
 
 .chat-message--system {
-  color: var(--color-spring-green);
-  font-weight: var(--font-weight-bold);
-  font-size: var(--font-size-caption);
-  background: rgba(144, 238, 144, 0.1);
-  border-radius: var(--radius-sm);
-  padding: var(--space-xs) var(--space-sm);
+  background-color: rgba(32, 178, 170, 0.1);
+  color: var(--color-teal);
+  text-align: center;
+  font-style: italic;
 }
 
-.chat-message--correct {
-  color: var(--color-spring-green);
-  font-weight: var(--font-weight-bold);
-  background: rgba(144, 238, 144, 0.15);
+.chat-message--normal {
+  background-color: var(--color-bg-input);
 }
 
 .chat-message--wrong {
-  color: var(--color-text-secondary);
-}
-
-.chat-message--attack-announce {
+  background-color: rgba(255, 69, 0, 0.1);
   color: var(--color-orange-red);
-  font-weight: var(--font-weight-bold);
-  background: rgba(255, 69, 0, 0.1);
-  border-left: 3px solid var(--color-orange-red);
 }
 
 .chat-input-wrapper {
-  padding: var(--space-sm);
-  border-top: 1px solid var(--color-border);
   display: flex;
+  padding: var(--space-md);
   gap: var(--space-sm);
+  border-top: 1px solid var(--color-border);
+  position: sticky;
+  bottom: 0;
+  background-color: var(--color-bg-surface);
+}
+
+.chat-input-wrapper .input {
+  flex: 1;
 }
 
 /* ==========================================================================
    BUTTONS
    ========================================================================== */
 .btn {
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-sm);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  border: none;
+  transition: all var(--transition-fast);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-xs);
-  padding: var(--space-sm) var(--space-md);
-  font-family: var(--font-family);
-  font-size: var(--font-size-body);
-  font-weight: var(--font-weight-semibold);
-  line-height: 1;
-  border: none;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
 }
 
-.btn:hover {
-  filter: brightness(0.9);
-  transform: translateY(-1px);
+.btn--primary {
+  background-color: var(--color-coral);
+  color: white;
 }
 
-.btn:active {
-  transform: translateY(0);
-  filter: brightness(0.85);
+.btn--primary:hover {
+  background-color: var(--color-coral-dark);
 }
 
-.btn:focus-visible {
-  outline: 2px solid var(--color-teal);
-  outline-offset: 2px;
-}
-
-.btn--primary   { background-color: #FFFFFF; color: #fff; }
-.btn--secondary { background-color: var(--color-teal); color: #fff; }
 .btn--ghost {
   background-color: transparent;
-  color: var(--color-text-primary);
+  color: var(--color-text-secondary);
   border: 1px solid var(--color-border);
 }
-.btn--danger   { background-color: var(--color-orange-red); color: #fff; }
-.btn--icon {
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  border-radius: var(--radius-full);
-}
-.btn--active {
-  transform: scale(1.1);
-  box-shadow: 0 0 0 2px var(--color-text-primary);
+
+.btn--ghost:hover {
+  background-color: var(--color-border);
+  color: var(--color-text-primary);
 }
 
 /* ==========================================================================
-   TOOL BUTTONS
+   BADGES
    ========================================================================== */
-.tool-btn {
-  width: 44px;
-  height: 44px;
-  min-width: 44px;
-  min-height: 44px;
+.badge {
+  padding: var(--space-xs) var(--space-sm);
   border-radius: var(--radius-sm);
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-text-primary);
-  position: relative;
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-semibold);
 }
 
-.tool-btn:hover { background-color: var(--color-border); }
-.tool-btn--active {
-  background-color: var(--color-border);
-  transform: scale(1.1);
-  box-shadow: 0 0 0 2px var(--color-text-primary);
-}
-.tool-btn:focus-visible {
-  outline: 2px solid var(--color-teal);
-  outline-offset: 2px;
+.badge--warning {
+  background-color: rgba(255, 69, 0, 0.1);
+  color: var(--color-orange-red);
 }
 
-.color-swatch {
-  width: 24px;
-  height: 24px;
-  border-radius: var(--radius-full);
-  border: 2px solid transparent;
-  transition: border-color var(--transition-fast);
-}
-.tool-btn--active .color-swatch { border-color: var(--color-text-primary); }
-
-.brush-size-preview {
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.brush-dot {
-  background-color: var(--color-text-primary);
-  border-radius: var(--radius-full);
+.badge--gold {
+  background-color: rgba(255, 215, 0, 0.1);
+  color: var(--color-gold);
 }
 
 /* ==========================================================================
    AVATAR
    ========================================================================== */
 .avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-full);
-  background-color: var(--color-teal);
-  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: var(--font-weight-semibold);
-  font-size: var(--font-size-h2);
-  flex-shrink: 0;
-  overflow: hidden;
-}
-.avatar img { width: 100%; height: 100%; object-fit: cover; }
-.avatar--sm { width: 32px; height: 32px; font-size: var(--font-size-body); }
-.avatar--lg { width: 56px; height: 56px; font-size: var(--font-size-h1); }
-
-/* ==========================================================================
-   BADGE
-   ========================================================================== */
-.badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 2px var(--space-sm);
-  font-size: var(--font-size-caption);
-  font-weight: var(--font-weight-semibold);
-  border-radius: 999px;
-  background-color: var(--color-border);
-  color: var(--color-text-secondary);
-}
-.badge--success { background-color: var(--color-spring-green); color: #1a1a1a; }
-.badge--warning { background-color: var(--color-orange-red); color: #fff; }
-.badge--gold    { background-color: var(--color-gold); color: #1a1a1a; }
-
-/* ==========================================================================
-   PING INDICATOR
-   ========================================================================== */
-.ping-indicator {
-  display: flex;
-  align-items: center;
-  gap: var(--space-xs);
-  font-size: var(--font-size-caption);
-  font-weight: var(--font-weight-semibold);
-}
-.ping-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: var(--radius-full);
-}
-.ping-dot--good   { background-color: var(--color-spring-green); }
-.ping-dot--medium { background-color: var(--color-gold); }
-.ping-dot--bad    { background-color: var(--color-orange-red); }
-
-/* ==========================================================================
-   SKELETON LOADING
-   ========================================================================== */
-@keyframes skeleton-slide {
-  0%   { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
-.skeleton {
-  background: linear-gradient(90deg, var(--color-border) 25%, var(--color-bg-app) 50%, var(--color-border) 75%);
-  background-size: 200% 100%;
-  animation: skeleton-slide 1.5s ease-in-out infinite;
-  border-radius: var(--radius-sm);
-}
-.skeleton--circle { border-radius: var(--radius-full); width: 40px; height: 40px; }
-.skeleton--text   { height: 14px; margin-bottom: var(--space-xs); }
-.skeleton--text:last-child { width: 70%; }
-
-/* ==========================================================================
-   SPINNER
-   ========================================================================== */
-@keyframes spinner-rotate {
-  to { transform: rotate(360deg); }
-}
-.spinner {
   width: 32px;
   height: 32px;
-  border: 3px solid var(--color-border);
-  border-top-color: #FFFFFF;
-  border-radius: var(--radius-full);
-  animation: spinner-rotate 0.8s linear infinite;
+  border-radius: 50%;
+  background-color: var(--color-coral);
+  color: white;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-caption);
 }
-.spinner--center {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
+
+.avatar--sm {
+  width: 24px;
+  height: 24px;
+  font-size: 10px;
 }
 
 /* ==========================================================================
-   ATTACK EFFECT ANIMATIONS
+   ATTACK EFFECTS (Canvas Overlay)
    ========================================================================== */
-
-/* Attack incoming warning - 1.5s flashing before effect hits */
-.attack-effect--incoming {
-  animation: attack-incoming 0.25s ease-in-out infinite alternate;
+.attack-effect {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  font-weight: var(--font-weight-black);
+  opacity: 0;
+  text-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  animation: effect-fade-in 0.3s ease-out forwards;
 }
 
-@keyframes attack-incoming {
-  0%   { box-shadow: inset 0 0 0 4px transparent; }
-  100% { box-shadow: inset 0 0 0 4px var(--color-orange-red); }
+@keyframes effect-fade-in {
+  0%   { opacity: 0; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1); }
 }
 
-/* Effect active - 8s duration */
-.attack-effect--active {
-  animation: effect-active 8s linear forwards;
-}
-
-@keyframes effect-active {
-  0%   { --effect-opacity: 1; }
-  80%  { --effect-opacity: 1; }
-  100% { --effect-opacity: 0; opacity: 0; }
-}
-
-/* Effect fade out - 2s */
 .attack-effect--fading {
   animation: effect-fade-out 2s ease-out forwards;
 }
