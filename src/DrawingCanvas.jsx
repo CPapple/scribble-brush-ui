@@ -123,17 +123,17 @@ const DrawingCanvas = forwardRef(function DrawingCanvas({
       ctx.globalCompositeOperation = 'source-over';
       // 檢查是否使用吉躁筆刷圖案
       if (brushImageRef.current && canvasEffect === 'canvas-effect--noise') {
-        // 使用圖片筆刷
-        const pattern = ctx.createPattern(brushImageRef.current, 'repeat');
-        ctx.fillStyle = pattern;
+        // 使用圖片筆刷，大小與當前筆刷大小相關，並放大十倍
+        const imgSize = brushSize * 10;
+        ctx.drawImage(brushImageRef.current, pos.px - imgSize/2, pos.py - imgSize/2, imgSize, imgSize);
       } else {
         // 使用普通顏色筆刷
         ctx.fillStyle = brushColor;
+        ctx.beginPath();
+        ctx.arc(pos.px, pos.py, brushSize / 2, 0, Math.PI * 2);
+        ctx.fill();
       }
     }
-    ctx.beginPath();
-    ctx.arc(pos.px, pos.py, brushSize / 2, 0, Math.PI * 2);
-    ctx.fill();
     ctx.globalCompositeOperation = 'source-over';
   }, [brushColor, brushSize, tool, canvasEffect]);
 
@@ -194,17 +194,17 @@ const DrawingCanvas = forwardRef(function DrawingCanvas({
         ctx.globalCompositeOperation = 'source-over';
         // 檢查是否使用吉躁筆刷圖案
         if (brushImageRef.current && canvasEffect === 'canvas-effect--noise') {
-          // 使用圖片筆刷
-          const pattern = ctx.createPattern(brushImageRef.current, 'repeat');
-          ctx.fillStyle = pattern;
+          // 使用圖片筆刷，大小與當前筆刷大小相關，並放大十倍
+          const imgSize = brushSize * 10;
+          ctx.drawImage(brushImageRef.current, midPoint.px - imgSize/2, midPoint.py - imgSize/2, imgSize, imgSize);
         } else {
           // 使用普通顏色筆刷
           ctx.fillStyle = brushColor;
+          ctx.beginPath();
+          ctx.arc(midPoint.px, midPoint.py, brushSize / 2, 0, Math.PI * 2);
+          ctx.fill();
         }
       }
-      ctx.beginPath();
-      ctx.arc(midPoint.px, midPoint.py, brushSize / 2, 0, Math.PI * 2);
-      ctx.fill();
       ctx.globalCompositeOperation = 'source-over';
       return;
     }
